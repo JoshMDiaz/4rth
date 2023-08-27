@@ -32,10 +32,6 @@ const Matchups: React.FC = () => {
 		}
 	}, [])
 
-	useEffect(() => {
-		console.log(teamPoints)
-	}, [teamPoints])
-
 	const handleScoreChange = ({
 		roundIndex,
 		matchupIndex,
