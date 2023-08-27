@@ -32,6 +32,10 @@ const Matchups: React.FC = () => {
 		}
 	}, [])
 
+	useEffect(() => {
+		console.log(teamPoints)
+	}, [teamPoints])
+
 	const handleScoreChange = ({
 		roundIndex,
 		matchupIndex,
@@ -59,6 +63,61 @@ const Matchups: React.FC = () => {
 		}))
 	}
 
+	function findWinners(matchupData: Record<string, number>) {
+		const maxScore = Math.max(...Object.values(matchupData))
+		return Object.keys(matchupData).filter(
+			(player) => matchupData[player] === maxScore
+		)
+	}
+
+	function updateWins(playerNames: Array<string>, type: 'subtract' | 'add') {
+		const playersData = JSON.parse(localStorage.getItem('players') ?? '') || []
+
+		for (const player of playersData) {
+			if (playerNames.includes(player.name)) {
+				type === 'subtract' ? (player.wins -= 1) : (player.wins += 1)
+			}
+		}
+
+		localStorage.setItem('players', JSON.stringify(playersData))
+	}
+
+	const updatePlayerPoints = ({
+		roundNumber,
+		matchupNumber,
+		type
+	}: {
+		roundNumber: string
+		matchupNumber: string
+		type: 'subtract' | 'add'
+	}) => {
+		const matchupData = teamPoints[roundNumber][matchupNumber]
+
+		const playersData = JSON.parse(localStorage.getItem('players') ?? '') || []
+
+		for (const player of playersData) {
+			const playerName = player.name
+
+			if (matchupData[playerName] !== undefined) {
+				type === 'subtract'
+					? (player.points -= matchupData[playerName])
+					: (player.points += matchupData[playerName])
+			}
+		}
+
+		localStorage.setItem('players', JSON.stringify(playersData))
+	}
+
+	function areAllValuesNumbers(obj: Record<string, number>) {
+		if (typeof obj !== 'object' || obj === null) {
+			return false
+		}
+
+		return Object.values(obj).every(
+			(value) => typeof value === 'number' && !isNaN(value)
+		)
+	}
+
 	const handleScoreSubmit = ({
 		roundIndex,
 		matchupIndex
@@ -66,34 +125,13 @@ const Matchups: React.FC = () => {
 		roundIndex: number
 		matchupIndex: number
 	}) => {
-		function findWinners(matchupData: Record<string, number>) {
-			const maxScore = Math.max(...Object.values(matchupData))
-			return Object.keys(matchupData).filter(
-				(player) => matchupData[player] === maxScore
-			)
-		}
-
 		const roundNumber = `round${roundIndex + 1}`,
-			matchupNumber = `matchup${matchupIndex + 1}`
+			matchupNumber = `matchup${matchupIndex + 1}`,
+			matchupData = teamPoints[roundNumber][matchupNumber],
+			matchupWinners = findWinners(matchupData)
 
-		const matchupData = teamPoints[roundNumber][matchupNumber]
-
-		const matchupWinners = findWinners(matchupData)
-
-		function updateWins(playerNames: Array<string>) {
-			const playersData =
-				JSON.parse(localStorage.getItem('players') ?? '') || []
-
-			for (const player of playersData) {
-				if (playerNames.includes(player.name)) {
-					player.wins += 1
-				}
-			}
-
-			localStorage.setItem('players', JSON.stringify(playersData))
-		}
-
-		updateWins(matchupWinners)
+		updateWins(matchupWinners, 'add')
+		updatePlayerPoints({ roundNumber, matchupNumber, type: 'add' })
 		setSubmittedResults((prevState) => ({
 			...prevState,
 			[roundNumber]: {
@@ -118,34 +156,13 @@ const Matchups: React.FC = () => {
 			}
 		}))
 
-		function findWinners(matchupData: Record<string, number>) {
-			const maxScore = Math.max(...Object.values(matchupData))
-			return Object.keys(matchupData).filter(
-				(player) => matchupData[player] === maxScore
-			)
-		}
-
 		const roundNumber = `round${roundIndex + 1}`,
-			matchupNumber = `matchup${matchupIndex + 1}`
+			matchupNumber = `matchup${matchupIndex + 1}`,
+			matchupData = teamPoints[roundNumber][matchupNumber],
+			matchupWinners = findWinners(matchupData)
 
-		const matchupData = teamPoints[roundNumber][matchupNumber]
-
-		const matchupWinners = findWinners(matchupData)
-
-		function updateWins(playerNames: Array<string>) {
-			const playersData =
-				JSON.parse(localStorage.getItem('players') ?? '') || []
-
-			for (const player of playersData) {
-				if (playerNames.includes(player.name)) {
-					player.wins -= 1
-				}
-			}
-
-			localStorage.setItem('players', JSON.stringify(playersData))
-		}
-
-		updateWins(matchupWinners)
+		updateWins(matchupWinners, 'subtract')
+		updatePlayerPoints({ roundNumber, matchupNumber, type: 'subtract' })
 	}
 
 	const renderMatchup = (
@@ -159,27 +176,20 @@ const Matchups: React.FC = () => {
 			team2Players = matchup.team2
 				.map((player) => (player ? player.name : 'TBD'))
 				.join(' / '),
-			roundMatchup =
-				teamPoints?.[`round${roundIndex + 1}`]?.[`matchup${matchupIndex + 1}`]
-
-		function areAllValuesNumbers(obj: Record<string, number>) {
-			if (typeof obj !== 'object' || obj === null) {
-				return false
-			}
-
-			return Object.values(obj).every(
-				(value) => typeof value === 'number' && !isNaN(value)
-			)
-		}
+			roundNumber = `round${roundIndex + 1}`,
+			matchupNumber = `matchup${matchupIndex + 1}`,
+			roundMatchup = teamPoints?.[roundNumber]?.[matchupNumber],
+			scoreSubmitted = !!submittedResults?.[roundNumber]?.[matchupNumber]
 
 		return (
 			<div key={matchupIndex}>
-				<h3>Matchup {matchupIndex + 1}</h3>
+				<h3>Court {matchupIndex + 1}</h3>
 				<div>
 					Team 1: {team1Players}{' '}
 					<input
 						type='number'
 						min={0}
+						disabled={scoreSubmitted}
 						onChange={(e) => {
 							handleScoreChange({
 								roundIndex,
@@ -195,6 +205,7 @@ const Matchups: React.FC = () => {
 					<input
 						type='number'
 						min={0}
+						disabled={scoreSubmitted}
 						onChange={(e) => {
 							handleScoreChange({
 								roundIndex,
@@ -212,9 +223,7 @@ const Matchups: React.FC = () => {
 						!roundMatchup ||
 						(roundMatchup && Object.keys(roundMatchup).length < 4) ||
 						!areAllValuesNumbers(roundMatchup) ||
-						!!submittedResults?.[`round${roundIndex + 1}`]?.[
-							`matchup${matchupIndex + 1}`
-						]
+						scoreSubmitted
 					}
 					onClick={(e) =>
 						handleScoreSubmit({
@@ -223,15 +232,9 @@ const Matchups: React.FC = () => {
 						})
 					}
 				>
-					{!!submittedResults?.[`round${roundIndex + 1}`]?.[
-						`matchup${matchupIndex + 1}`
-					]
-						? 'Submitted'
-						: 'Submit Scores'}
+					{scoreSubmitted ? 'Submitted' : 'Submit Scores'}
 				</Button>
-				{!!submittedResults?.[`round${roundIndex + 1}`]?.[
-					`matchup${matchupIndex + 1}`
-				] ? (
+				{scoreSubmitted ? (
 					<Button
 						variant='text'
 						color='primary'
