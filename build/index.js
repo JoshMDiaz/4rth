@@ -290,7 +290,7 @@ __export(matchups_exports, {
   default: () => matchups_default
 });
 var import_react4 = require("react"), import_material3 = require("@mui/material"), import_jsx_dev_runtime4 = require("react/jsx-dev-runtime"), Matchups = () => {
-  let [matchups, setMatchups] = (0, import_react4.useState)([]), [teamPoints, setTeamPoints] = (0, import_react4.useState)({});
+  let [matchups, setMatchups] = (0, import_react4.useState)([]), [teamPoints, setTeamPoints] = (0, import_react4.useState)({}), [submittedResults, setSubmittedResults] = (0, import_react4.useState)({});
   (0, import_react4.useEffect)(() => {
     let savedMatchups = localStorage.getItem("matchups");
     savedMatchups && setMatchups(JSON.parse(savedMatchups));
@@ -326,16 +326,47 @@ var import_react4 = require("react"), import_material3 = require("@mui/material"
         (player) => matchupData2[player] === maxScore
       );
     }
-    let matchupData = teamPoints[`round${roundIndex + 1}`][`matchup${matchupIndex + 1}`], matchupWinners = findWinners(matchupData);
+    let roundNumber = `round${roundIndex + 1}`, matchupNumber = `matchup${matchupIndex + 1}`, matchupData = teamPoints[roundNumber][matchupNumber], matchupWinners = findWinners(matchupData);
     function updateWins(playerNames) {
       let playersData = JSON.parse(localStorage.getItem("players") ?? "") || [];
       for (let player of playersData)
         playerNames.includes(player.name) && (player.wins += 1);
       localStorage.setItem("players", JSON.stringify(playersData));
     }
+    updateWins(matchupWinners), setSubmittedResults((prevState) => ({
+      ...prevState,
+      [roundNumber]: {
+        ...prevState[roundNumber],
+        [matchupNumber]: !0
+      }
+    }));
+  }, handleEditScores = ({
+    roundIndex,
+    matchupIndex
+  }) => {
+    setSubmittedResults((prevState) => ({
+      ...prevState,
+      [`round${roundIndex + 1}`]: {
+        ...prevState[`round${roundIndex + 1}`],
+        [`matchup${matchupIndex + 1}`]: !1
+      }
+    }));
+    function findWinners(matchupData2) {
+      let maxScore = Math.max(...Object.values(matchupData2));
+      return Object.keys(matchupData2).filter(
+        (player) => matchupData2[player] === maxScore
+      );
+    }
+    let roundNumber = `round${roundIndex + 1}`, matchupNumber = `matchup${matchupIndex + 1}`, matchupData = teamPoints[roundNumber][matchupNumber], matchupWinners = findWinners(matchupData);
+    function updateWins(playerNames) {
+      let playersData = JSON.parse(localStorage.getItem("players") ?? "") || [];
+      for (let player of playersData)
+        playerNames.includes(player.name) && (player.wins -= 1);
+      localStorage.setItem("players", JSON.stringify(playersData));
+    }
     updateWins(matchupWinners);
   }, renderMatchup = (matchup, roundIndex, matchupIndex) => {
-    var _a;
+    var _a, _b, _c, _d;
     let team1Players = matchup.team1.map((player) => player ? player.name : "TBD").join(" / "), team2Players = matchup.team2.map((player) => player ? player.name : "TBD").join(" / "), roundMatchup = (_a = teamPoints == null ? void 0 : teamPoints[`round${roundIndex + 1}`]) == null ? void 0 : _a[`matchup${matchupIndex + 1}`];
     function areAllValuesNumbers(obj) {
       return typeof obj != "object" || obj === null ? !1 : Object.values(obj).every(
@@ -348,8 +379,8 @@ var import_react4 = require("react"), import_material3 = require("@mui/material"
         matchupIndex + 1
       ] }, void 0, !0, {
         fileName: "app/routes/matchups.tsx",
-        lineNumber: 120,
-        columnNumber: 9
+        lineNumber: 177,
+        columnNumber: 5
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
         "Team 1: ",
@@ -373,15 +404,15 @@ var import_react4 = require("react"), import_material3 = require("@mui/material"
           !1,
           {
             fileName: "app/routes/matchups.tsx",
-            lineNumber: 123,
-            columnNumber: 11
+            lineNumber: 180,
+            columnNumber: 6
           },
           this
         )
       ] }, void 0, !0, {
         fileName: "app/routes/matchups.tsx",
-        lineNumber: 121,
-        columnNumber: 9
+        lineNumber: 178,
+        columnNumber: 5
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
         "Team 2: ",
@@ -405,48 +436,68 @@ var import_react4 = require("react"), import_material3 = require("@mui/material"
           !1,
           {
             fileName: "app/routes/matchups.tsx",
-            lineNumber: 138,
-            columnNumber: 11
+            lineNumber: 195,
+            columnNumber: 6
           },
           this
         )
       ] }, void 0, !0, {
         fileName: "app/routes/matchups.tsx",
-        lineNumber: 136,
-        columnNumber: 9
+        lineNumber: 193,
+        columnNumber: 5
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
         import_material3.Button,
         {
           variant: "contained",
           color: "primary",
-          disabled: !roundMatchup || roundMatchup && Object.keys(roundMatchup).length < 4 || !areAllValuesNumbers(roundMatchup),
+          disabled: !roundMatchup || roundMatchup && Object.keys(roundMatchup).length < 4 || !areAllValuesNumbers(roundMatchup) || !!((_b = submittedResults == null ? void 0 : submittedResults[`round${roundIndex + 1}`]) != null && _b[`matchup${matchupIndex + 1}`]),
           onClick: (e) => handleScoreSubmit({
             roundIndex,
             matchupIndex
           }),
-          children: "Submit Scores"
+          children: (_c = submittedResults == null ? void 0 : submittedResults[`round${roundIndex + 1}`]) != null && _c[`matchup${matchupIndex + 1}`] ? "Submitted" : "Submit Scores"
         },
         void 0,
         !1,
         {
           fileName: "app/routes/matchups.tsx",
-          lineNumber: 151,
-          columnNumber: 9
+          lineNumber: 208,
+          columnNumber: 5
         },
         this
-      )
+      ),
+      (_d = submittedResults == null ? void 0 : submittedResults[`round${roundIndex + 1}`]) != null && _d[`matchup${matchupIndex + 1}`] ? /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(
+        import_material3.Button,
+        {
+          variant: "text",
+          color: "primary",
+          onClick: (e) => handleEditScores({
+            roundIndex,
+            matchupIndex
+          }),
+          children: "Edit Scores"
+        },
+        void 0,
+        !1,
+        {
+          fileName: "app/routes/matchups.tsx",
+          lineNumber: 235,
+          columnNumber: 6
+        },
+        this
+      ) : null
     ] }, matchupIndex, !0, {
       fileName: "app/routes/matchups.tsx",
-      lineNumber: 119,
-      columnNumber: 7
+      lineNumber: 176,
+      columnNumber: 4
     }, this);
   };
   return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h1", { children: "Matchups" }, void 0, !1, {
       fileName: "app/routes/matchups.tsx",
-      lineNumber: 174,
-      columnNumber: 7
+      lineNumber: 254,
+      columnNumber: 4
     }, this),
     matchups.map((round, roundIndex) => /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h2", { children: [
@@ -454,21 +505,21 @@ var import_react4 = require("react"), import_material3 = require("@mui/material"
         roundIndex + 1
       ] }, void 0, !0, {
         fileName: "app/routes/matchups.tsx",
-        lineNumber: 177,
-        columnNumber: 11
+        lineNumber: 257,
+        columnNumber: 6
       }, this),
       round.map(
         (matchup, matchupIndex) => renderMatchup(matchup, roundIndex, matchupIndex)
       )
     ] }, roundIndex, !0, {
       fileName: "app/routes/matchups.tsx",
-      lineNumber: 176,
-      columnNumber: 9
+      lineNumber: 256,
+      columnNumber: 5
     }, this))
   ] }, void 0, !0, {
     fileName: "app/routes/matchups.tsx",
-    lineNumber: 173,
-    columnNumber: 5
+    lineNumber: 253,
+    columnNumber: 3
   }, this);
 }, matchups_default = Matchups;
 
@@ -955,7 +1006,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-47UANIVL.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-VKBH4ZJP.js", "/build/_shared/chunk-JC6JYJ3W.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-NMZL6IDN.js", "/build/_shared/chunk-U2ZXMFGW.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-OQP7MEYG.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-WSDS2ZZT.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/matchups": { id: "routes/matchups", parentId: "root", path: "matchups", index: void 0, caseSensitive: void 0, module: "/build/routes/matchups-DSHOT7NY.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/players": { id: "routes/players", parentId: "root", path: "players", index: void 0, caseSensitive: void 0, module: "/build/routes/players-SUNKA4RA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/results": { id: "routes/results", parentId: "root", path: "results", index: void 0, caseSensitive: void 0, module: "/build/routes/results-U6HPQ6DJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "388c6c3e", hmr: { runtime: "/build/_shared/chunk-U2ZXMFGW.js", timestamp: 1693094162653 }, url: "/build/manifest-388C6C3E.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-47UANIVL.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-VKBH4ZJP.js", "/build/_shared/chunk-JC6JYJ3W.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-NMZL6IDN.js", "/build/_shared/chunk-U2ZXMFGW.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-ESXMMA75.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-WSDS2ZZT.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/matchups": { id: "routes/matchups", parentId: "root", path: "matchups", index: void 0, caseSensitive: void 0, module: "/build/routes/matchups-3SJANJKY.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/players": { id: "routes/players", parentId: "root", path: "players", index: void 0, caseSensitive: void 0, module: "/build/routes/players-SUNKA4RA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/results": { id: "routes/results", parentId: "root", path: "results", index: void 0, caseSensitive: void 0, module: "/build/routes/results-U6HPQ6DJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "284fd26f", hmr: { runtime: "/build/_shared/chunk-U2ZXMFGW.js", timestamp: 1693107473699 }, url: "/build/manifest-284FD26F.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
