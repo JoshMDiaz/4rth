@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Player } from './players'
 import { Button } from '@mui/material'
+import GenerateMatchups from '~/components/GenerateMatchups'
 
 type Matchups = Array<Matchup[]>
 
@@ -248,7 +249,9 @@ const Matchups: React.FC = () => {
 		)
 	}
 
-	return (
+	return matchups.length === 0 ? (
+		<GenerateMatchups setMatchups={setMatchups} />
+	) : (
 		<div>
 			<h1>Matchups</h1>
 			{matchups.map((round, roundIndex) => (

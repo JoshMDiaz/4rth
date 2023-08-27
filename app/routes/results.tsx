@@ -75,7 +75,7 @@ const ResultsPage: React.FC = () => {
 					</Typography>
 				)}
 			</div>
-			<TableContainer component={Paper}>
+			<TableContainer>
 				<Table>
 					<TableHead>
 						<TableRow>
