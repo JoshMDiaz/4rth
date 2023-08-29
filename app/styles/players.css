@@ -1,0 +1,28 @@
+.players-header {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.players-text-input {
+	margin-bottom: 16px;
+}
+
+.player-name {
+	width: 50vw;
+	max-width: 100%;
+}
+
+.edit-player-name input {
+	height: 4px;
+	width: 100%;
+}
+
+.flex-container {
+	display: flex;
+	gap: 8px;
+}
+
+.justify-end {
+	justify-content: flex-end;
+}
