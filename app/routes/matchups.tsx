@@ -253,7 +253,6 @@ const Matchups: React.FC = () => {
 		<GenerateMatchups setMatchups={setMatchups} />
 	) : (
 		<div>
-			<h1>Matchups</h1>
 			{matchups.map((round, roundIndex) => (
 				<div key={roundIndex}>
 					<h2>Round {roundIndex + 1}</h2>

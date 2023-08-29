@@ -46,9 +46,6 @@ const ResultsPage: React.FC = () => {
 
 	return (
 		<>
-			<Typography variant='h4' gutterBottom>
-				Results
-			</Typography>
 			<div>
 				<Typography>1st Place:</Typography>
 				{sortedPlayerData.length > 0 && (

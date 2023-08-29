@@ -7,12 +7,14 @@ import {
 	TableCell,
 	TableContainer,
 	TableHead,
-	TableRow
+	TableRow,
+	Grid
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
+import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined'
 
 export interface Player {
 	id: number
@@ -114,19 +116,34 @@ const PlayerForm: React.FC = () => {
 
 	return (
 		<div>
-			<TextField
-				label='Player Name'
-				value={newPlayerName}
-				onChange={handlePlayerNameChange}
-				onKeyDown={handleKeyDown}
-				disabled={isTextFieldDisabled}
-			/>
-			<Button variant='contained' color='primary' onClick={addPlayer}>
-				Add Player
-			</Button>
-			<Button variant='contained' color='secondary' onClick={handleClearTable}>
-				Clear Table
-			</Button>
+			<Grid
+				container
+				direction='row'
+				justifyContent='space-around'
+				alignItems='center'
+			>
+				<TextField
+					label='Player Name'
+					value={newPlayerName}
+					onChange={handlePlayerNameChange}
+					onKeyDown={handleKeyDown}
+					disabled={isTextFieldDisabled}
+				/>
+				<Grid item xs={2}>
+					<Button variant='outlined' color='primary' onClick={addPlayer}>
+						<AddOutlinedIcon />
+					</Button>
+				</Grid>
+				<Grid item xs={2}>
+					<Button
+						variant='outlined'
+						color='secondary'
+						onClick={handleClearTable}
+					>
+						<RestartAltOutlinedIcon />
+					</Button>
+				</Grid>
+			</Grid>
 			<TableContainer>
 				<Table>
 					<TableHead>
