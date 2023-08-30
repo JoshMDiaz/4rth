@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Player } from './players'
-import { Button } from '@mui/material'
+import { Button, Paper, TextField } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
+import '../styles/matchups.css'
+import NumberInput from '~/components/NumberInput'
 
 type Matchups = Array<Matchup[]>
 
@@ -179,58 +181,41 @@ const Matchups: React.FC = () => {
 			scoreSubmitted = !!submittedResults?.[roundNumber]?.[matchupNumber]
 
 		return (
-			<div key={matchupIndex}>
+			<div key={matchupIndex} className='court-container'>
 				<h3>Court {matchupIndex + 1}</h3>
-				<div>
-					Team 1: {team1Players}{' '}
-					<input
-						type='number'
+				<div className='team-score-container'>
+					<span>{team1Players}</span>
+					<NumberInput
 						min={0}
 						disabled={scoreSubmitted}
-						onChange={(e) => {
+						onChange={(value) => {
 							handleScoreChange({
 								roundIndex,
 								matchupIndex,
 								team: 'team1',
-								score: parseInt(e.target.value)
+								score: value
 							})
 						}}
+						className='match-score'
 					/>
 				</div>
-				<div>
-					Team 2: {team2Players}{' '}
-					<input
-						type='number'
+				<div className='matchup-divider' />
+				<div className='team-score-container'>
+					<span>{team2Players}</span>
+					<NumberInput
 						min={0}
 						disabled={scoreSubmitted}
-						onChange={(e) => {
+						onChange={(value) => {
 							handleScoreChange({
 								roundIndex,
 								matchupIndex,
 								team: 'team2',
-								score: parseInt(e.target.value)
+								score: value
 							})
 						}}
+						className='match-score'
 					/>
 				</div>
-				<Button
-					variant='contained'
-					color='primary'
-					disabled={
-						!roundMatchup ||
-						(roundMatchup && Object.keys(roundMatchup).length < 4) ||
-						!areAllValuesNumbers(roundMatchup) ||
-						scoreSubmitted
-					}
-					onClick={(e) =>
-						handleScoreSubmit({
-							roundIndex,
-							matchupIndex
-						})
-					}
-				>
-					{scoreSubmitted ? 'Submitted' : 'Submit Scores'}
-				</Button>
 				{scoreSubmitted ? (
 					<Button
 						variant='text'
@@ -244,22 +229,47 @@ const Matchups: React.FC = () => {
 					>
 						Edit Scores
 					</Button>
-				) : null}
+				) : (
+					<Button
+						variant='contained'
+						color='primary'
+						disabled={
+							!roundMatchup ||
+							(roundMatchup && Object.keys(roundMatchup).length < 4) ||
+							!areAllValuesNumbers(roundMatchup) ||
+							scoreSubmitted
+						}
+						onClick={(e) =>
+							handleScoreSubmit({
+								roundIndex,
+								matchupIndex
+							})
+						}
+					>
+						{scoreSubmitted ? 'Submitted' : 'Submit Scores'}
+					</Button>
+				)}
 			</div>
 		)
 	}
 
 	return matchups.length === 0 ? (
-		<GenerateMatchups setMatchups={setMatchups} />
+		<Paper className='flex justify-content-center p-16'>
+			<GenerateMatchups setMatchups={setMatchups} />
+		</Paper>
 	) : (
-		<div>
+		<div className='matchups-container'>
 			{matchups.map((round, roundIndex) => (
-				<div key={roundIndex}>
-					<h2>Round {roundIndex + 1}</h2>
-					{round.map((matchup, matchupIndex) =>
-						renderMatchup(matchup, roundIndex, matchupIndex)
-					)}
-				</div>
+				<Paper key={roundIndex} className='round-container'>
+					<div className='round-header'>
+						<h2>Round {roundIndex + 1}</h2>
+					</div>
+					<div className='round-content'>
+						{round.map((matchup, matchupIndex) =>
+							renderMatchup(matchup, roundIndex, matchupIndex)
+						)}
+					</div>
+				</Paper>
 			))}
 		</div>
 	)

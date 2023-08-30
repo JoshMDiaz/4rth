@@ -6,10 +6,10 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	Paper,
-	Typography
+	Paper
 } from '@mui/material'
 import { Player } from './players'
+import '../styles/results.css'
 
 const ResultsPage: React.FC = () => {
 	const [playerData, setPlayerData] = useState<Player[]>([])
@@ -44,35 +44,36 @@ const ResultsPage: React.FC = () => {
 		(player) => player.skinz === mostSkinzPlayer.skinz
 	)
 
-	return (
-		<>
-			<div>
-				<Typography>1st Place:</Typography>
-				{sortedPlayerData.length > 0 && (
-					<Typography>{sortedPlayerData[0].name}</Typography>
-				)}
-			</div>
-			<div>
-				<Typography>2nd Place:</Typography>
-				{sortedPlayerData.length > 1 && (
-					<Typography>{sortedPlayerData[1].name}</Typography>
-				)}
-			</div>
-			<div>
-				<Typography>3rd Place:</Typography>
-				{sortedPlayerData.length > 2 && (
-					<Typography>{sortedPlayerData[2].name}</Typography>
-				)}
-			</div>
-			<div>
-				<Typography>Most Skinz:</Typography>
-				{mostSkinzPlayers.length > 0 && (
-					<Typography>
+	type WinnerProps = {
+		header: string
+		placeIndex?: number
+		skinz?: boolean
+	}
+
+	const Winner = ({ header, placeIndex = 0, skinz }: WinnerProps) => {
+		return (
+			<Paper className='winner'>
+				<h2>{header}</h2>
+				{skinz && mostSkinzPlayers.length > 0 ? (
+					<span>
 						{mostSkinzPlayers.map((player) => player.name).join(', ')}
-					</Typography>
-				)}
+					</span>
+				) : sortedPlayerData.length > 0 ? (
+					<span>{sortedPlayerData[placeIndex].name}</span>
+				) : null}
+			</Paper>
+		)
+	}
+
+	return (
+		<div className='results-container'>
+			<div className='winners-container'>
+				<Winner header='1st Place' placeIndex={0} />
+				<Winner header='2nd Place' placeIndex={1} />
+				<Winner header='3rd Place' placeIndex={2} />
+				<Winner header='Most Skinz' skinz />
 			</div>
-			<TableContainer>
+			<TableContainer component={Paper}>
 				<Table>
 					<TableHead>
 						<TableRow>
@@ -94,7 +95,7 @@ const ResultsPage: React.FC = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
-		</>
+		</div>
 	)
 }
 

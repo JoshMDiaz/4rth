@@ -2,9 +2,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 16px;
-}
-
-.players-text-input {
+	padding: 16px;
 	margin-bottom: 16px;
 }
 

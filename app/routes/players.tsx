@@ -8,14 +8,16 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	Card,
-	Hidden
+	Paper,
+	Hidden,
+	Alert
 } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import '../styles/players.css'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
+import GenerateMatchups from '~/components/GenerateMatchups'
 
 export interface Player {
 	id: number
@@ -28,6 +30,7 @@ export interface Player {
 const PlayerForm: React.FC = () => {
 	const [players, setPlayers] = useState<Player[]>([]),
 		[newPlayerName, setNewPlayerName] = useState(''),
+		[localStorageMatchups, setLocalStorageMatchups] = useState([]),
 		[editingPlayer, setEditingPlayer] = useState<Player | null>(null)
 
 	// Load players from localStorage on component mount
@@ -35,6 +38,13 @@ const PlayerForm: React.FC = () => {
 		const savedPlayers = localStorage.getItem('players')
 		if (savedPlayers) {
 			setPlayers(JSON.parse(savedPlayers))
+		}
+	}, [])
+
+	useEffect(() => {
+		const matchups = localStorage.getItem('matchups')
+		if (matchups) {
+			setLocalStorageMatchups(JSON.parse(matchups))
 		}
 	}, [])
 
@@ -106,7 +116,7 @@ const PlayerForm: React.FC = () => {
 		setEditingPlayer(null)
 	}
 
-	const isTextFieldDisabled = players.length >= 8 || !!editingPlayer
+	const playerListFull = players.length >= 8
 
 	const handleAddPlayerKeyDown = (
 		event: React.KeyboardEvent<HTMLInputElement>
@@ -128,76 +138,88 @@ const PlayerForm: React.FC = () => {
 
 	return (
 		<div>
-			<div className='players-header'>
+			<Paper className='players-header'>
 				<div className='players-text-input flex-container'>
-					<TextField
-						label='Player Name'
-						value={newPlayerName}
-						onChange={handlePlayerNameChange}
-						onKeyDown={handleAddPlayerKeyDown}
-						disabled={isTextFieldDisabled}
-						className='player-name'
-					/>
-					{!isTextFieldDisabled ? (
-						<Button variant='outlined' color='primary' onClick={addPlayer}>
-							<AddOutlinedIcon />
-						</Button>
-					) : null}
+					{!playerListFull ? (
+						<>
+							<TextField
+								label='Player Name'
+								value={newPlayerName}
+								onChange={handlePlayerNameChange}
+								onKeyDown={handleAddPlayerKeyDown}
+								disabled={playerListFull}
+								className='player-name'
+							/>
+
+							<Button variant='outlined' color='primary' onClick={addPlayer}>
+								<AddOutlinedIcon />
+							</Button>
+						</>
+					) : (
+						<GenerateMatchups redirect />
+					)}
 				</div>
 				<Button variant='text' color='error' onClick={handleClearTable}>
 					Clear Table
 				</Button>
-			</div>
-			<TableContainer>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Name</TableCell>
-							<TableCell />
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{players.map((player) => (
-							<TableRow key={player.id}>
-								<TableCell>
-									{editingPlayer?.id === player.id ? (
-										<div className='flex-container'>
-											<TextField
-												className='edit-player-name'
-												value={editingPlayer.name}
-												onChange={(e) =>
-													setEditingPlayer({
-														...editingPlayer,
-														name: e.target.value
-													})
-												}
-												onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-													handleEditPlayerKeyDown(
-														e,
-														editingPlayer,
-														editingPlayer.name
-													)
-												}
-											/>
-											<Hidden smDown>
-												{editingPlayer?.id === player.id ? (
-													<Button
-														variant='outlined'
-														color='primary'
-														onClick={() =>
-															saveEditedName(editingPlayer, editingPlayer.name)
+			</Paper>
+			<Paper>
+				{players.length > 0 ? (
+					<TableContainer>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<TableCell>Name</TableCell>
+									<TableCell />
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{players.map((player) => (
+									<TableRow key={player.id}>
+										<TableCell>
+											{editingPlayer?.id === player.id ? (
+												<div className='flex-container'>
+													<TextField
+														className='edit-player-name'
+														value={editingPlayer.name}
+														onChange={(e) =>
+															setEditingPlayer({
+																...editingPlayer,
+																name: e.target.value
+															})
 														}
-													>
-														<SaveOutlinedIcon />
-													</Button>
-												) : null}
-											</Hidden>
-										</div>
-									) : (
-										player.name
-									)}
-								</TableCell>
-								{/* <TableCell>
+														onKeyDown={(
+															e: React.KeyboardEvent<HTMLInputElement>
+														) =>
+															handleEditPlayerKeyDown(
+																e,
+																editingPlayer,
+																editingPlayer.name
+															)
+														}
+													/>
+													<Hidden smDown>
+														{editingPlayer?.id === player.id ? (
+															<Button
+																variant='outlined'
+																color='primary'
+																onClick={() =>
+																	saveEditedName(
+																		editingPlayer,
+																		editingPlayer.name
+																	)
+																}
+															>
+																<SaveOutlinedIcon />
+															</Button>
+														) : null}
+													</Hidden>
+												</div>
+											) : (
+												player.name
+											)}
+										</TableCell>
+										{/* <TableCell>
 									{player.skinz}
 									<Button
 										variant='text'
@@ -207,47 +229,56 @@ const PlayerForm: React.FC = () => {
 										<AddOutlinedIcon />
 									</Button>
 								</TableCell> */}
-								<TableCell>
-									<div className='flex-container justify-end'>
-										{editingPlayer?.id !== player.id ? (
-											<>
-												<Button
-													variant='outlined'
-													color='primary'
-													onClick={() => editPlayerName(player)}
-												>
-													<EditOutlinedIcon />
-												</Button>
-												<Button
-													variant='outlined'
-													color='secondary'
-													onClick={() => handleDeleteRow(player.id)}
-												>
-													<DeleteOutlineOutlinedIcon />
-												</Button>
-											</>
-										) : (
-											<Hidden smUp>
-												{editingPlayer?.id === player.id ? (
-													<Button
-														variant='outlined'
-														color='primary'
-														onClick={() =>
-															saveEditedName(editingPlayer, editingPlayer.name)
-														}
-													>
-														<SaveOutlinedIcon />
-													</Button>
-												) : null}
-											</Hidden>
-										)}
-									</div>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+										<TableCell>
+											{!localStorageMatchups ? (
+												<div className='flex-container justify-end'>
+													{editingPlayer?.id !== player.id ? (
+														<>
+															<Button
+																variant='outlined'
+																color='primary'
+																onClick={() => editPlayerName(player)}
+															>
+																<EditOutlinedIcon />
+															</Button>
+															<Button
+																variant='outlined'
+																color='secondary'
+																onClick={() => handleDeleteRow(player.id)}
+															>
+																<DeleteOutlineOutlinedIcon />
+															</Button>
+														</>
+													) : (
+														<Hidden smUp>
+															{editingPlayer?.id === player.id ? (
+																<Button
+																	variant='outlined'
+																	color='primary'
+																	onClick={() =>
+																		saveEditedName(
+																			editingPlayer,
+																			editingPlayer.name
+																		)
+																	}
+																>
+																	<SaveOutlinedIcon />
+																</Button>
+															) : null}
+														</Hidden>
+													)}
+												</div>
+											) : null}
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				) : (
+					<Alert severity='info'>Add players above</Alert>
+				)}
+			</Paper>
 		</div>
 	)
 }

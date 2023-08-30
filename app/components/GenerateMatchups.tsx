@@ -1,15 +1,30 @@
 import { Button } from '@mui/material'
 import { Matchup } from '../routes/matchups'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useNavigate } from '@remix-run/react'
+import type { Player } from '../routes/players'
 
-type GenerateMatchupsProps = {
-	setMatchups: Dispatch<SetStateAction<Matchup[][]>>
-}
+type GenerateMatchupsProps =
+	| {
+			setMatchups: Dispatch<SetStateAction<Matchup[][]>>
+			redirect?: never
+	  }
+	| {
+			setMatchups?: never
+			redirect: boolean
+	  }
 
 const GenerateMatchups = ({
-	setMatchups
+	setMatchups,
+	redirect
 }: GenerateMatchupsProps): JSX.Element => {
-	const players = JSON.parse(localStorage.getItem('players') ?? '') || []
+	const [players, setPlayers] = useState<Player[]>([]),
+		[localStorageMatchups, setLocalStorageMatchups] = useState([]),
+		navigate = useNavigate()
+
+	useEffect(() => {
+		setPlayers(JSON.parse(localStorage.getItem('players') ?? '') ?? [])
+	}, [])
 
 	const shuffleArray = (array: any[]) => {
 		const shuffledArray = array.slice()
@@ -45,18 +60,25 @@ const GenerateMatchups = ({
 			}
 
 			localStorage.setItem('matchups', JSON.stringify(matchups))
-			setMatchups(matchups)
+			redirect ? navigate('/Matchups') : setMatchups?.(matchups)
 		} else {
 			alert('You need exactly 8 players to generate matchups.')
 		}
 	}
+
+	useEffect(() => {
+		const matchups = localStorage.getItem('matchups')
+		if (matchups) {
+			setLocalStorageMatchups(JSON.parse(matchups))
+		}
+	}, [])
 
 	return (
 		<Button
 			variant='contained'
 			color='primary'
 			onClick={generate}
-			disabled={players.length !== 8}
+			disabled={(!redirect && players.length !== 8) || !!localStorageMatchups}
 		>
 			Generate Matchups
 		</Button>
