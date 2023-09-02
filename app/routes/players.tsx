@@ -97,13 +97,6 @@ const PlayerForm: React.FC = () => {
 		setEditingPlayer(null)
 	}
 
-	// const incrementSkinz = (id: number) => {
-	// 	const updatedPlayers = players.map((player) =>
-	// 		player.id === id ? { ...player, skinz: player.skinz + 1 } : player
-	// 	)
-	// 	setPlayers(updatedPlayers)
-	// }
-
 	const handleClearTable = () => {
 		setPlayers([])
 		setNewPlayerName('')
@@ -111,6 +104,8 @@ const PlayerForm: React.FC = () => {
 		localStorage.removeItem('matchups')
 		localStorage.removeItem('teamInputScores')
 		localStorage.removeItem('players')
+		localStorage.removeItem('submittedScores')
+		localStorage.removeItem('teamPoints')
 	}
 
 	const handleDeleteRow = (id: number) => {

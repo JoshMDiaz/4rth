@@ -16,7 +16,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 .winner h2 {
   margin: 0;

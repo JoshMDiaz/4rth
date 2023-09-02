@@ -4,6 +4,7 @@ import { Button, Paper } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import '../styles/matchups.css'
 import NumberInput from '~/components/NumberInput'
+import SkinzDrawer from '~/components/SkinzDrawer'
 
 type Matchups = Array<Matchup[]>
 
@@ -29,7 +30,8 @@ const Matchups: React.FC = () => {
 		>({}),
 		[teamInputScores, setTeamInputScores] = useState<
 			Record<string, Record<string, Record<string, number>>> | undefined
-		>()
+		>(),
+		[playerData, setPlayerData] = useState<Player[]>([])
 
 	useEffect(() => {
 		const savedMatchups = localStorage.getItem('matchups')
@@ -39,9 +41,30 @@ const Matchups: React.FC = () => {
 	}, [])
 
 	useEffect(() => {
+		const submittedScores = localStorage.getItem('submittedScores')
+		if (submittedScores) {
+			setSubmittedResults(JSON.parse(submittedScores))
+		}
+	}, [])
+
+	useEffect(() => {
 		const saveTeamInputScores = localStorage.getItem('teamInputScores')
 		if (saveTeamInputScores) {
 			setTeamInputScores(JSON.parse(saveTeamInputScores))
+		}
+	}, [])
+
+	useEffect(() => {
+		const savedPlayers = localStorage.getItem('players')
+		if (savedPlayers) {
+			setPlayerData(JSON.parse(savedPlayers))
+		}
+	}, [])
+
+	useEffect(() => {
+		const savedTeamPoints = localStorage.getItem('teamPoints')
+		if (savedTeamPoints) {
+			setTeamPoints(JSON.parse(savedTeamPoints))
 		}
 	}, [])
 
@@ -58,19 +81,23 @@ const Matchups: React.FC = () => {
 	}) => {
 		const players = matchups[roundIndex][matchupIndex][team]
 
-		setTeamPoints((prevState) => ({
-			...prevState,
-			[`round${roundIndex + 1}`]: {
-				...prevState[`round${roundIndex + 1}`],
-				[`matchup${matchupIndex + 1}`]: {
-					...prevState[`round${roundIndex + 1}`]?.[
-						`matchup${matchupIndex + 1}`
-					],
-					[players[0]?.name ?? '']: score,
-					[players[1]?.name ?? '']: score
+		setTeamPoints((prevState) => {
+			const points = {
+				...prevState,
+				[`round${roundIndex + 1}`]: {
+					...prevState[`round${roundIndex + 1}`],
+					[`matchup${matchupIndex + 1}`]: {
+						...prevState[`round${roundIndex + 1}`]?.[
+							`matchup${matchupIndex + 1}`
+						],
+						[players[0]?.name ?? '']: score,
+						[players[1]?.name ?? '']: score
+					}
 				}
 			}
-		}))
+			localStorage.setItem('teamPoints', JSON.stringify(points))
+			return points
+		})
 		setTeamInputScores((prevState) => {
 			const newScores = {
 				...prevState,
@@ -97,15 +124,14 @@ const Matchups: React.FC = () => {
 	}
 
 	function updateWins(playerNames: Array<string>, type: 'subtract' | 'add') {
-		const playersData = JSON.parse(localStorage.getItem('players') ?? '') || []
-
-		for (const player of playersData) {
+		const players = [...playerData]
+		for (const player of players) {
 			if (playerNames.includes(player.name)) {
 				type === 'subtract' ? (player.wins -= 1) : (player.wins += 1)
 			}
 		}
 
-		localStorage.setItem('players', JSON.stringify(playersData))
+		localStorage.setItem('players', JSON.stringify(players))
 	}
 
 	const updatePlayerPoints = ({
@@ -117,11 +143,10 @@ const Matchups: React.FC = () => {
 		matchupNumber: string
 		type: 'subtract' | 'add'
 	}) => {
-		const matchupData = teamPoints[roundNumber][matchupNumber]
+		const matchupData = teamPoints[roundNumber][matchupNumber],
+			players = [...playerData]
 
-		const playersData = JSON.parse(localStorage.getItem('players') ?? '') || []
-
-		for (const player of playersData) {
+		for (const player of players) {
 			const playerName = player.name
 
 			if (matchupData[playerName] !== undefined) {
@@ -131,7 +156,7 @@ const Matchups: React.FC = () => {
 			}
 		}
 
-		localStorage.setItem('players', JSON.stringify(playersData))
+		localStorage.setItem('players', JSON.stringify(players))
 	}
 
 	function areAllValuesNumbers(obj: Record<string, number>) {
@@ -158,13 +183,17 @@ const Matchups: React.FC = () => {
 
 		updateWins(matchupWinners, 'add')
 		updatePlayerPoints({ roundNumber, matchupNumber, type: 'add' })
-		setSubmittedResults((prevState) => ({
-			...prevState,
-			[roundNumber]: {
-				...prevState[roundNumber],
-				[matchupNumber]: true
+		setSubmittedResults((prevState) => {
+			const results = {
+				...prevState,
+				[roundNumber]: {
+					...prevState[roundNumber],
+					[matchupNumber]: true
+				}
 			}
-		}))
+			localStorage.setItem('submittedScores', JSON.stringify(results))
+			return results
+		})
 	}
 
 	const handleEditScores = ({
@@ -174,17 +203,21 @@ const Matchups: React.FC = () => {
 		roundIndex: number
 		matchupIndex: number
 	}) => {
-		setSubmittedResults((prevState) => ({
-			...prevState,
-			[`round${roundIndex + 1}`]: {
-				...prevState[`round${roundIndex + 1}`],
-				[`matchup${matchupIndex + 1}`]: false
+		setSubmittedResults((prevState) => {
+			const results = {
+				...prevState,
+				[roundNumber]: {
+					...prevState[roundNumber],
+					[matchupNumber]: false
+				}
 			}
-		}))
+			localStorage.setItem('submittedScores', JSON.stringify(results))
+			return results
+		})
 
 		const roundNumber = `round${roundIndex + 1}`,
 			matchupNumber = `matchup${matchupIndex + 1}`,
-			matchupData = teamPoints[roundNumber][matchupNumber],
+			matchupData = teamPoints?.[roundNumber]?.[matchupNumber],
 			matchupWinners = findWinners(matchupData)
 
 		updateWins(matchupWinners, 'subtract')
@@ -292,6 +325,7 @@ const Matchups: React.FC = () => {
 				<Paper key={roundIndex} className='round-container'>
 					<div className='round-header'>
 						<h2>Round {roundIndex + 1}</h2>
+						<SkinzDrawer />
 					</div>
 					<div className='round-content'>
 						{round.map((matchup, matchupIndex) =>

@@ -11,13 +11,23 @@ import {
 import { Player } from './players'
 import '../styles/results.css'
 
+type SubmittedResultsType = Record<string, Record<string, boolean>>
+
 const ResultsPage: React.FC = () => {
-	const [playerData, setPlayerData] = useState<Player[]>([])
+	const [playerData, setPlayerData] = useState<Player[]>([]),
+		[submittedResults, setSubmittedResults] = useState<SubmittedResultsType>()
 
 	useEffect(() => {
 		const savedPlayers = localStorage.getItem('players')
 		if (savedPlayers) {
 			setPlayerData(JSON.parse(savedPlayers))
+		}
+	}, [])
+
+	useEffect(() => {
+		const submittedScores = localStorage.getItem('submittedScores')
+		if (submittedScores) {
+			setSubmittedResults(JSON.parse(submittedScores))
 		}
 	}, [])
 
@@ -44,6 +54,18 @@ const ResultsPage: React.FC = () => {
 		(player) => player.skinz === mostSkinzPlayer.skinz
 	)
 
+	function showWinners(obj: SubmittedResultsType) {
+		for (const roundKey in obj) {
+			const round = obj[roundKey]
+			for (const matchupKey in round) {
+				if (!round[matchupKey]) {
+					return false // Return false if any value is not present or is false
+				}
+			}
+		}
+		return true // Return true if all values are present and true
+	}
+
 	type WinnerProps = {
 		header: string
 		placeIndex?: number
@@ -53,13 +75,11 @@ const ResultsPage: React.FC = () => {
 	const Winner = ({ header, placeIndex = 0, skinz }: WinnerProps) => {
 		return (
 			<Paper className='winner'>
-				<h2>{header}</h2>
+				<span>{header}</span>
 				{skinz && mostSkinzPlayers.length > 0 ? (
-					<span>
-						{mostSkinzPlayers.map((player) => player.name).join(', ')}
-					</span>
+					<h2>{mostSkinzPlayers.map((player) => player.name).join(', ')}</h2>
 				) : sortedPlayerData.length > 0 ? (
-					<span>{sortedPlayerData[placeIndex].name}</span>
+					<h2>{sortedPlayerData[placeIndex].name}</h2>
 				) : null}
 			</Paper>
 		)
@@ -67,7 +87,7 @@ const ResultsPage: React.FC = () => {
 
 	return (
 		<div className='results-container'>
-			{playerData.length === 8 ? (
+			{playerData.length === 8 && showWinners(submittedResults ?? {}) ? (
 				<div className='winners-container'>
 					<Winner header='1st Place' placeIndex={0} />
 					<Winner header='2nd Place' placeIndex={1} />
