@@ -10,6 +10,14 @@ import {
 } from '@mui/material'
 import { Player } from './players'
 import '../styles/results.css'
+import { V2_MetaFunction } from '@remix-run/node'
+
+export const meta: V2_MetaFunction = () => {
+	return [
+		{ title: 'Skinz Results' },
+		{ name: 'description', content: 'See the results from the Skinz mixer.' }
+	]
+}
 
 type SubmittedResultsType = Record<string, Record<string, boolean>>
 
@@ -54,16 +62,36 @@ const ResultsPage: React.FC = () => {
 		(player) => player.skinz === mostSkinzPlayer.skinz
 	)
 
-	function showWinners(obj: SubmittedResultsType) {
+	type MatchupResultType = boolean
+	type RoundResultType = {
+		[matchupKey: string]: MatchupResultType
+	}
+	type SubmittedResultsType = {
+		[roundKey: string]: RoundResultType
+	}
+
+	function showWinners(obj: SubmittedResultsType): boolean {
+		// Check if there are 7 rounds
+		if (Object.keys(obj).length !== 7) {
+			return false
+		}
+
 		for (const roundKey in obj) {
 			const round = obj[roundKey]
+
+			// Check if there are 2 results for each round
+			if (Object.keys(round).length !== 2) {
+				return false
+			}
+
 			for (const matchupKey in round) {
 				if (!round[matchupKey]) {
 					return false // Return false if any value is not present or is false
 				}
 			}
 		}
-		return true // Return true if all values are present and true
+
+		return true // Return true if all checks pass
 	}
 
 	type WinnerProps = {
@@ -87,7 +115,9 @@ const ResultsPage: React.FC = () => {
 
 	return (
 		<div className='results-container'>
-			{playerData.length === 8 && showWinners(submittedResults ?? {}) ? (
+			{playerData.length === 8 &&
+			!!submittedResults &&
+			showWinners(submittedResults) ? (
 				<div className='winners-container'>
 					<Winner header='1st Place' placeIndex={0} />
 					<Winner header='2nd Place' placeIndex={1} />

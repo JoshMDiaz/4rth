@@ -5,6 +5,17 @@ import GenerateMatchups from '~/components/GenerateMatchups'
 import '../styles/matchups.css'
 import NumberInput from '~/components/NumberInput'
 import SkinzDrawer from '~/components/SkinzDrawer'
+import { V2_MetaFunction } from '@remix-run/node'
+
+export const meta: V2_MetaFunction = () => {
+	return [
+		{ title: 'Skinz Matchups' },
+		{
+			name: 'description',
+			content: 'See the generated matchups for the Skinz mixer.'
+		}
+	]
+}
 
 type Matchups = Array<Matchup[]>
 

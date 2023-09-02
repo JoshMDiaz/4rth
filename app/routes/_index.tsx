@@ -1,7 +1,7 @@
 import type { V2_MetaFunction } from '@remix-run/node'
 import { useLocation } from '@remix-run/react'
 import { useEffect } from 'react'
-import { redirect, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 export const meta: V2_MetaFunction = () => {
 	return [

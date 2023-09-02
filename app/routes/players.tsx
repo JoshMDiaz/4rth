@@ -18,6 +18,14 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import '../styles/players.css'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import GenerateMatchups from '~/components/GenerateMatchups'
+import { V2_MetaFunction } from '@remix-run/node'
+
+export const meta: V2_MetaFunction = () => {
+	return [
+		{ title: 'Skinz Players' },
+		{ name: 'description', content: 'Add the players for the Skinz mixer.' }
+	]
+}
 
 export interface Player {
 	id: number
@@ -217,16 +225,6 @@ const PlayerForm: React.FC = () => {
 												player.name
 											)}
 										</TableCell>
-										{/* <TableCell>
-									{player.skinz}
-									<Button
-										variant='text'
-										color='primary'
-										onClick={() => incrementSkinz(player.id)}
-									>
-										<AddOutlinedIcon />
-									</Button>
-								</TableCell> */}
 										<TableCell>
 											{!localStorageMatchups ? (
 												<div className='flex-container justify-end'>
