@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import { BottomNavigation, BottomNavigationAction } from '@mui/material'
 import AllInclusiveOutlinedIcon from '@mui/icons-material/AllInclusiveOutlined'
@@ -18,6 +18,10 @@ const Nav = ({}: NavProps): JSX.Element => {
 		navigate(`/${name}`)
 		setValue(name)
 	}
+
+	useEffect(() => {
+		setValue(pageName)
+	}, [])
 
 	return (
 		<div className='nav'>
