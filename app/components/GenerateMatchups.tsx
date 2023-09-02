@@ -19,52 +19,130 @@ const GenerateMatchups = ({
 	redirect
 }: GenerateMatchupsProps): JSX.Element => {
 	const [players, setPlayers] = useState<Player[]>([]),
-		[localStorageMatchups, setLocalStorageMatchups] = useState([]),
+		[localStorageMatchups, setLocalStorageMatchups] = useState(),
 		navigate = useNavigate()
 
-	useEffect(() => {
-		setPlayers(JSON.parse(localStorage.getItem('players') ?? '') ?? [])
-	}, [])
+	// const generate = () => {
+	// 	if (players.length === 8) {
+	// 		const matchups: Matchup[][] = []
+	// 		const rounds = 7 // Number of rounds
 
-	const shuffleArray = (array: any[]) => {
-		const shuffledArray = array.slice()
-		for (let i = shuffledArray.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1))
-			;[shuffledArray[i], shuffledArray[j]] = [
-				shuffledArray[j],
-				shuffledArray[i]
-			]
-		}
-		return shuffledArray
-	}
+	// 		// Generate the round-robin matchups
+	// 		for (let round = 0; round < rounds; round++) {
+	// 			const roundMatchups: Matchup[] = []
+
+	// 			for (let i = 0; i < 8; i += 4) {
+	// 				const matchup: Matchup = {
+	// 					team1: [players[i], players[i + 1]],
+	// 					team2: [players[i + 2], players[i + 3]]
+	// 				}
+	// 				roundMatchups.push(matchup)
+	// 			}
+
+	// 			matchups.push(roundMatchups)
+	// 		}
+
+	// 		localStorage.setItem('matchups', JSON.stringify(matchups))
+	// 		redirect ? navigate('/Matchups') : setMatchups?.(matchups)
+	// 	} else {
+	// 		alert('You need exactly 8 players to generate matchups.')
+	// 	}
+	// }
 
 	const generate = () => {
 		if (players.length === 8) {
-			const matchups: any[] = []
-			const rounds = 7 // Number of rounds
-
-			// Generate the round-robin matchups
-			for (let round = 0; round < rounds; round++) {
-				const roundMatchups: Matchup[] = []
-				const shuffledPlayers = shuffleArray(players)
-
-				for (let i = 0; i < shuffledPlayers.length; i += 4) {
-					const matchup: Matchup = {
-						team1: [shuffledPlayers[i], shuffledPlayers[i + 1]],
-						team2: [shuffledPlayers[i + 2], shuffledPlayers[i + 3]]
+			const matchups: Matchup[][] = [
+				// Round 1
+				[
+					{
+						team1: [players[0], players[1]],
+						team2: [players[2], players[3]]
+					},
+					{
+						team1: [players[4], players[5]],
+						team2: [players[6], players[7]]
 					}
-					roundMatchups.push(matchup)
-				}
-
-				matchups.push(roundMatchups)
-			}
-
+				],
+				// Round 2
+				[
+					{
+						team1: [players[4], players[6]],
+						team2: [players[5], players[7]]
+					},
+					{
+						team1: [players[0], players[2]],
+						team2: [players[1], players[3]]
+					}
+				],
+				// Round 3
+				[
+					{
+						team1: [players[0], players[3]],
+						team2: [players[1], players[2]]
+					},
+					{
+						team1: [players[4], players[7]],
+						team2: [players[5], players[6]]
+					}
+				],
+				// Round 4
+				[
+					{
+						team1: [players[2], players[6]],
+						team2: [players[3], players[7]]
+					},
+					{
+						team1: [players[0], players[4]],
+						team2: [players[1], players[5]]
+					}
+				],
+				// Round 5
+				[
+					{
+						team1: [players[0], players[5]],
+						team2: [players[1], players[6]]
+					},
+					{
+						team1: [players[2], players[7]],
+						team2: [players[3], players[4]]
+					}
+				],
+				// Round 6
+				[
+					{
+						team1: [players[2], players[4]],
+						team2: [players[3], players[5]]
+					},
+					{
+						team1: [players[0], players[6]],
+						team2: [players[1], players[7]]
+					}
+				],
+				// Round 7
+				[
+					{
+						team1: [players[0], players[7]],
+						team2: [players[1], players[4]]
+					},
+					{
+						team1: [players[2], players[5]],
+						team2: [players[3], players[6]]
+					}
+				]
+			]
 			localStorage.setItem('matchups', JSON.stringify(matchups))
 			redirect ? navigate('/Matchups') : setMatchups?.(matchups)
 		} else {
 			alert('You need exactly 8 players to generate matchups.')
 		}
 	}
+
+	useEffect(() => {
+		const players = localStorage.getItem('players')
+		if (players) {
+			setPlayers(JSON.parse(players))
+		}
+	}, [])
 
 	useEffect(() => {
 		const matchups = localStorage.getItem('matchups')

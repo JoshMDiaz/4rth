@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Player } from './players'
-import { Button, Paper, TextField } from '@mui/material'
+import { Button, Paper } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import '../styles/matchups.css'
 import NumberInput from '~/components/NumberInput'
@@ -26,12 +26,22 @@ const Matchups: React.FC = () => {
 		>({}),
 		[submittedResults, setSubmittedResults] = useState<
 			Record<string, Record<string, boolean>>
-		>({})
+		>({}),
+		[teamInputScores, setTeamInputScores] = useState<
+			Record<string, Record<string, Record<string, number>>> | undefined
+		>()
 
 	useEffect(() => {
 		const savedMatchups = localStorage.getItem('matchups')
 		if (savedMatchups) {
 			setMatchups(JSON.parse(savedMatchups))
+		}
+	}, [])
+
+	useEffect(() => {
+		const saveTeamInputScores = localStorage.getItem('teamInputScores')
+		if (saveTeamInputScores) {
+			setTeamInputScores(JSON.parse(saveTeamInputScores))
 		}
 	}, [])
 
@@ -47,6 +57,7 @@ const Matchups: React.FC = () => {
 		score: number
 	}) => {
 		const players = matchups[roundIndex][matchupIndex][team]
+
 		setTeamPoints((prevState) => ({
 			...prevState,
 			[`round${roundIndex + 1}`]: {
@@ -60,6 +71,22 @@ const Matchups: React.FC = () => {
 				}
 			}
 		}))
+		setTeamInputScores((prevState) => {
+			const newScores = {
+				...prevState,
+				[`round${roundIndex + 1}`]: {
+					...prevState?.[`round${roundIndex + 1}`],
+					[`matchup${matchupIndex + 1}`]: {
+						...prevState?.[`round${roundIndex + 1}`]?.[
+							`matchup${matchupIndex + 1}`
+						],
+						[team]: score
+					}
+				}
+			}
+			localStorage.setItem('teamInputScores', JSON.stringify(newScores))
+			return newScores
+		})
 	}
 
 	function findWinners(matchupData: Record<string, number>) {
@@ -186,6 +213,7 @@ const Matchups: React.FC = () => {
 				<div className='team-score-container'>
 					<span>{team1Players}</span>
 					<NumberInput
+						value={teamInputScores?.[roundNumber]?.[matchupNumber]?.team1}
 						min={0}
 						disabled={scoreSubmitted}
 						onChange={(value) => {
@@ -203,6 +231,7 @@ const Matchups: React.FC = () => {
 				<div className='team-score-container'>
 					<span>{team2Players}</span>
 					<NumberInput
+						value={teamInputScores?.[roundNumber]?.[matchupNumber]?.team2}
 						min={0}
 						disabled={scoreSubmitted}
 						onChange={(value) => {

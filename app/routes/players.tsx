@@ -108,6 +108,9 @@ const PlayerForm: React.FC = () => {
 		setPlayers([])
 		setNewPlayerName('')
 		setEditingPlayer(null)
+		localStorage.removeItem('matchups')
+		localStorage.removeItem('teamInputScores')
+		localStorage.removeItem('players')
 	}
 
 	const handleDeleteRow = (id: number) => {

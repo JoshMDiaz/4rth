@@ -4,6 +4,7 @@ import { BottomNavigation, BottomNavigationAction } from '@mui/material'
 import AllInclusiveOutlinedIcon from '@mui/icons-material/AllInclusiveOutlined'
 import { useNavigate, useLocation } from '@remix-run/react'
 import 'app/app.css'
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
 
 type NavProps = {}
 
@@ -27,24 +28,6 @@ const Nav = ({}: NavProps): JSX.Element => {
 					navChange(name)
 				}}
 			>
-				{/* <Link to='/players'>
-					<BottomNavigationAction
-						label='Players'
-						icon={<GroupOutlinedIcon />}
-					/>
-				</Link>
-				<Link to='/matchups'>
-					<BottomNavigationAction
-						label='Matchups'
-						icon={<AllInclusiveOutlinedIcon />}
-					/>
-				</Link>
-				<Link to='/results'>
-					<BottomNavigationAction
-						label='Results'
-						icon={<AllInclusiveOutlinedIcon />}
-					/>
-				</Link> */}
 				<BottomNavigationAction
 					label='Players'
 					value='Players'
@@ -58,7 +41,7 @@ const Nav = ({}: NavProps): JSX.Element => {
 				<BottomNavigationAction
 					label='Results'
 					value='Results'
-					icon={<AllInclusiveOutlinedIcon />}
+					icon={<CheckOutlinedIcon />}
 				/>
 			</BottomNavigation>
 		</div>

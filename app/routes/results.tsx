@@ -67,12 +67,14 @@ const ResultsPage: React.FC = () => {
 
 	return (
 		<div className='results-container'>
-			<div className='winners-container'>
-				<Winner header='1st Place' placeIndex={0} />
-				<Winner header='2nd Place' placeIndex={1} />
-				<Winner header='3rd Place' placeIndex={2} />
-				<Winner header='Most Skinz' skinz />
-			</div>
+			{playerData.length === 8 ? (
+				<div className='winners-container'>
+					<Winner header='1st Place' placeIndex={0} />
+					<Winner header='2nd Place' placeIndex={1} />
+					<Winner header='3rd Place' placeIndex={2} />
+					<Winner header='Most Skinz' skinz />
+				</div>
+			) : null}
 			<TableContainer component={Paper}>
 				<Table>
 					<TableHead>
