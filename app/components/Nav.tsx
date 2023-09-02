@@ -21,7 +21,7 @@ const Nav = ({}: NavProps): JSX.Element => {
 
 	useEffect(() => {
 		setValue(pageName)
-	}, [])
+	}, [pageName])
 
 	return (
 		<div className='nav'>
