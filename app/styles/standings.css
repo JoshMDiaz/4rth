@@ -8,6 +8,21 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
   }
+  .winners-container .winner:last-child {
+    grid-column: span 2;
+  }
+}
+@media (min-width: 997px) {
+  .winners-container {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .winners-container .winner:nth-child(-n+3) {
+    grid-column: span 2;
+  }
+  .winners-container .winner:nth-child(n+4) {
+    grid-column: span 3;
+  }
 }
 
 .winner {
@@ -31,4 +46,4 @@
   gap: 32px;
 }
 
-/*# sourceMappingURL=results.css.map */
+/*# sourceMappingURL=standings.css.map */

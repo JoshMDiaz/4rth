@@ -43,8 +43,8 @@ const Nav = ({}: NavProps): JSX.Element => {
 					icon={<AllInclusiveOutlinedIcon />}
 				/>
 				<BottomNavigationAction
-					label='Results'
-					value='Results'
+					label='Standings'
+					value='Standings'
 					icon={<CheckOutlinedIcon />}
 				/>
 			</BottomNavigation>

@@ -5,6 +5,24 @@
 	@media (min-width: 650px) {
 		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: auto;
+		.winner {
+			&:last-child {
+				grid-column: span 2;
+			}
+		}
+	}
+	@media (min-width: 997px) {
+		grid-template-columns: repeat(6, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		.winner {
+			&:nth-child(-n + 3) {
+				grid-column: span 2;
+			}
+
+			&:nth-child(n + 4) {
+				grid-column: span 3;
+			}
+		}
 	}
 }
 
@@ -15,6 +33,7 @@
 	align-items: center;
 	flex-direction: column;
 	gap: 8px;
+
 	h2 {
 		margin: 0;
 	}

@@ -9,19 +9,17 @@ import {
 	Paper
 } from '@mui/material'
 import { Player } from './players'
-import '../styles/results.css'
+import '../styles/standings.css'
 import { V2_MetaFunction } from '@remix-run/node'
 
 export const meta: V2_MetaFunction = () => {
 	return [
-		{ title: 'Skinz Results' },
+		{ title: 'Skinz Standings' },
 		{ name: 'description', content: 'See the results from the Skinz mixer.' }
 	]
 }
 
-type SubmittedResultsType = Record<string, Record<string, boolean>>
-
-const ResultsPage: React.FC = () => {
+const StandingsPage: React.FC = () => {
 	const [playerData, setPlayerData] = useState<Player[]>([]),
 		[submittedResults, setSubmittedResults] = useState<SubmittedResultsType>()
 
@@ -119,9 +117,10 @@ const ResultsPage: React.FC = () => {
 			!!submittedResults &&
 			showWinners(submittedResults) ? (
 				<div className='winners-container'>
-					<Winner header='1st Place' placeIndex={0} />
-					<Winner header='2nd Place' placeIndex={1} />
-					<Winner header='3rd Place' placeIndex={2} />
+					<Winner header='1st' placeIndex={0} />
+					<Winner header='2nd' placeIndex={1} />
+					<Winner header='3rd' placeIndex={2} />
+					<Winner header='4RTH' placeIndex={3} />
 					<Winner header='Most Skinz' skinz />
 				</div>
 			) : null}
@@ -151,4 +150,4 @@ const ResultsPage: React.FC = () => {
 	)
 }
 
-export default ResultsPage
+export default StandingsPage
