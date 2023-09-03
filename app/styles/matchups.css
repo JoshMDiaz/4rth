@@ -1,7 +1,7 @@
 .matchups-container {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
 }
 @media (min-width: 650px) {
   .matchups-container {

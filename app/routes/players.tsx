@@ -24,6 +24,8 @@ import '../styles/players.css'
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import { V2_MetaFunction } from '@remix-run/node'
+import { Player, usePlayers } from '~/hooks/usePlayers'
+import NewPlayersButton from '~/components/NewPlayersButton'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -32,28 +34,14 @@ export const meta: V2_MetaFunction = () => {
 	]
 }
 
-export interface Player {
-	id: number
-	name: string
-	wins: number
-	skinz: number
-	points: number
-}
-
 const PlayerForm: React.FC = () => {
-	const [players, setPlayers] = useState<Player[]>([]),
+	const [players, updatePlayers] = usePlayers(),
 		[newPlayerName, setNewPlayerName] = useState(''),
 		[localStorageMatchups, setLocalStorageMatchups] = useState(),
 		[editingPlayer, setEditingPlayer] = useState<Player | null>(null),
-		[isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
-
-	// Load players from localStorage on component mount
-	useEffect(() => {
-		const savedPlayers = localStorage.getItem('players')
-		if (savedPlayers) {
-			setPlayers(JSON.parse(savedPlayers))
-		}
-	}, [])
+		[isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState<
+			Record<string, boolean>
+		>({})
 
 	useEffect(() => {
 		const matchups = localStorage.getItem('matchups')
@@ -77,7 +65,7 @@ const PlayerForm: React.FC = () => {
 	const addPlayer = () => {
 		if (players.length < 8 && newPlayerName.trim() !== '') {
 			const isNameTaken = players.some(
-				(player) => player.name === newPlayerName
+				(player: Player) => player.name === newPlayerName
 			)
 			if (!isNameTaken) {
 				const newPlayer: Player = {
@@ -87,7 +75,7 @@ const PlayerForm: React.FC = () => {
 					skinz: 0,
 					points: 0
 				}
-				setPlayers([...players, newPlayer])
+				updatePlayers([...players, newPlayer])
 				setNewPlayerName('')
 
 				if (players.length + 1 === 8) {
@@ -107,13 +95,13 @@ const PlayerForm: React.FC = () => {
 		const updatedPlayers = players.map((p) =>
 			p.id === player.id ? { ...p, name: newName } : p
 		)
-		setPlayers(updatedPlayers)
+		updatePlayers(updatedPlayers)
 		setEditingPlayer(null)
 	}
 
 	const handleDeleteRow = (id: number) => {
 		const updatedPlayers = players.filter((player) => player.id !== id)
-		setPlayers(updatedPlayers)
+		updatePlayers(updatedPlayers)
 		setEditingPlayer(null)
 	}
 
@@ -137,30 +125,47 @@ const PlayerForm: React.FC = () => {
 		}
 	}
 
+	const openDeletePlayerDialog = (playerId: Player['id']) => {
+		setIsConfirmDeleteOpen((prevState) => ({
+			...prevState,
+			[playerId]: true
+		}))
+	}
+
+	const closeDeletePlayerDialog = (playerId: Player['id']) => {
+		setIsConfirmDeleteOpen((prevState) => ({
+			...prevState,
+			[playerId]: false
+		}))
+	}
+
 	return (
 		<div>
-			<Paper className='players-header'>
-				{!playerListFull ? (
-					<div className='flex-container'>
-						<TextField
-							label='Player Name'
-							value={newPlayerName}
-							onChange={handlePlayerNameChange}
-							onKeyDown={handleAddPlayerKeyDown}
-							disabled={playerListFull}
-							className='player-name'
-						/>
+			{players.length > 0 ? <NewPlayersButton /> : null}
+			{!localStorageMatchups ? (
+				<Paper className='players-header'>
+					{!playerListFull ? (
+						<div className='flex-container'>
+							<TextField
+								label='Player Name'
+								value={newPlayerName}
+								onChange={handlePlayerNameChange}
+								onKeyDown={handleAddPlayerKeyDown}
+								disabled={playerListFull}
+								className='player-name'
+							/>
 
-						<Button variant='outlined' color='primary' onClick={addPlayer}>
-							<AddOutlinedIcon />
-						</Button>
-					</div>
-				) : (
-					<div className='generate-container'>
-						<GenerateMatchups redirect />
-					</div>
-				)}
-			</Paper>
+							<Button variant='outlined' color='primary' onClick={addPlayer}>
+								<AddOutlinedIcon />
+							</Button>
+						</div>
+					) : (
+						<div className='generate-container'>
+							<GenerateMatchups redirect />
+						</div>
+					)}
+				</Paper>
+			) : null}
 			<Paper>
 				{players.length > 0 ? (
 					<TableContainer>
@@ -232,11 +237,13 @@ const PlayerForm: React.FC = () => {
 															<Button
 																variant='outlined'
 																color='error'
-																onClick={() => setIsConfirmDeleteOpen(true)}
+																onClick={() =>
+																	openDeletePlayerDialog(player.id)
+																}
 															>
 																<DeleteOutlineOutlinedIcon />
 															</Button>
-															<Dialog open={isConfirmDeleteOpen}>
+															<Dialog open={isConfirmDeleteOpen[player.id]}>
 																<DialogTitle>Are you sure?</DialogTitle>
 																<DialogContent>
 																	<DialogContentText>
@@ -249,7 +256,7 @@ const PlayerForm: React.FC = () => {
 																		variant='text'
 																		color='secondary'
 																		onClick={() =>
-																			setIsConfirmDeleteOpen(false)
+																			closeDeletePlayerDialog(player.id)
 																		}
 																	>
 																		Cancel
@@ -259,7 +266,7 @@ const PlayerForm: React.FC = () => {
 																		color='primary'
 																		onClick={() => {
 																			handleDeleteRow(player.id)
-																			setIsConfirmDeleteOpen(false)
+																			closeDeletePlayerDialog(player.id)
 																		}}
 																	>
 																		Confirm

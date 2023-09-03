@@ -10,8 +10,8 @@ type NavProps = {}
 
 const Nav = ({}: NavProps): JSX.Element => {
 	const { pathname } = useLocation(),
-		pageName = pathname.split('/')[1]
-	const [value, setValue] = useState(pageName),
+		pageName = pathname.split('/')[1],
+		[value, setValue] = useState(pageName),
 		navigate = useNavigate()
 
 	const navChange = (name: string) => {

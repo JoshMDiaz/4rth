@@ -2,7 +2,7 @@ import { Button } from '@mui/material'
 import { Matchup } from '../routes/matchups'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useNavigate } from '@remix-run/react'
-import type { Player } from '../routes/players'
+import { Player } from '~/hooks/usePlayers'
 
 type GenerateMatchupsProps =
 	| {

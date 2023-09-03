@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Player } from './players'
 import { Button, Paper } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import '../styles/matchups.css'
 import NumberInput from '~/components/NumberInput'
 import SkinzDrawer from '~/components/SkinzDrawer'
 import { V2_MetaFunction } from '@remix-run/node'
+import { Player, usePlayers } from '~/hooks/usePlayers'
+import { useNavigate } from '@remix-run/react'
+import NewPlayersButton from '~/components/NewPlayersButton'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -42,7 +44,8 @@ const Matchups: React.FC = () => {
 		[teamInputScores, setTeamInputScores] = useState<
 			Record<string, Record<string, Record<string, number>>> | undefined
 		>(),
-		[playerData, setPlayerData] = useState<Player[]>([])
+		[players, _, loadingPlayers] = usePlayers(),
+		navigate = useNavigate()
 
 	useEffect(() => {
 		const savedMatchups = localStorage.getItem('matchups')
@@ -62,13 +65,6 @@ const Matchups: React.FC = () => {
 		const saveTeamInputScores = localStorage.getItem('teamInputScores')
 		if (saveTeamInputScores) {
 			setTeamInputScores(JSON.parse(saveTeamInputScores))
-		}
-	}, [])
-
-	useEffect(() => {
-		const savedPlayers = localStorage.getItem('players')
-		if (savedPlayers) {
-			setPlayerData(JSON.parse(savedPlayers))
 		}
 	}, [])
 
@@ -135,14 +131,14 @@ const Matchups: React.FC = () => {
 	}
 
 	function updateWins(playerNames: Array<string>, type: 'subtract' | 'add') {
-		const players = [...playerData]
-		for (const player of players) {
+		const updatedPlayers = [...players]
+		for (const player of updatedPlayers) {
 			if (playerNames.includes(player.name)) {
 				type === 'subtract' ? (player.wins -= 1) : (player.wins += 1)
 			}
 		}
 
-		localStorage.setItem('players', JSON.stringify(players))
+		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 
 	const updatePlayerPoints = ({
@@ -155,9 +151,9 @@ const Matchups: React.FC = () => {
 		type: 'subtract' | 'add'
 	}) => {
 		const matchupData = teamPoints[roundNumber][matchupNumber],
-			players = [...playerData]
+			updatedPlayers = [...players]
 
-		for (const player of players) {
+		for (const player of updatedPlayers) {
 			const playerName = player.name
 
 			if (matchupData[playerName] !== undefined) {
@@ -167,7 +163,7 @@ const Matchups: React.FC = () => {
 			}
 		}
 
-		localStorage.setItem('players', JSON.stringify(players))
+		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 
 	function areAllValuesNumbers(obj: Record<string, number>) {
@@ -326,12 +322,41 @@ const Matchups: React.FC = () => {
 		)
 	}
 
-	return matchups.length === 0 ? (
-		<Paper className='flex justify-content-center p-16'>
-			<GenerateMatchups setMatchups={setMatchups} />
-		</Paper>
-	) : (
+	const ShowNewPlayersButton = () => {
+		return players.length > 0 ? <NewPlayersButton /> : null
+	}
+
+	if (loadingPlayers) {
+		return null
+	}
+
+	if (players.length !== 8) {
+		return (
+			<Paper className='flex justify-content-center p-16'>
+				<ShowNewPlayersButton />
+				<Button
+					variant='contained'
+					color='primary'
+					onClick={() => navigate('/players')}
+				>
+					Add Players
+				</Button>
+			</Paper>
+		)
+	}
+
+	if (matchups.length === 0) {
+		return (
+			<Paper className='flex justify-content-center p-16'>
+				<ShowNewPlayersButton />
+				<GenerateMatchups setMatchups={setMatchups} />
+			</Paper>
+		)
+	}
+
+	return (
 		<div className='matchups-container'>
+			<ShowNewPlayersButton />
 			{matchups.map((round, roundIndex) => (
 				<Paper key={roundIndex} className='round-container'>
 					<div className='round-header'>

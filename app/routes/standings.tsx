@@ -8,9 +8,10 @@ import {
 	TableRow,
 	Paper
 } from '@mui/material'
-import { Player } from './players'
 import '../styles/standings.css'
 import { V2_MetaFunction } from '@remix-run/node'
+import { Player, usePlayers } from '~/hooks/usePlayers'
+import NewPlayersButton from '~/components/NewPlayersButton'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -20,15 +21,8 @@ export const meta: V2_MetaFunction = () => {
 }
 
 const StandingsPage: React.FC = () => {
-	const [playerData, setPlayerData] = useState<Player[]>([]),
+	const [players] = usePlayers(),
 		[submittedResults, setSubmittedResults] = useState<SubmittedResultsType>()
-
-	useEffect(() => {
-		const savedPlayers = localStorage.getItem('players')
-		if (savedPlayers) {
-			setPlayerData(JSON.parse(savedPlayers))
-		}
-	}, [])
 
 	useEffect(() => {
 		const submittedScores = localStorage.getItem('submittedScores')
@@ -37,12 +31,12 @@ const StandingsPage: React.FC = () => {
 		}
 	}, [])
 
-	const mostSkinzPlayer = playerData.reduce((maxSkinzPlayer, player) => {
+	const mostSkinzPlayer = players.reduce((maxSkinzPlayer, player) => {
 		if (player.skinz > maxSkinzPlayer.skinz) {
 			return player
 		}
 		return maxSkinzPlayer
-	}, playerData[0])
+	}, players[0])
 
 	// Custom sort function to sort by wins and then by points
 	const customSort = (a: Player, b: Player) => {
@@ -52,11 +46,11 @@ const StandingsPage: React.FC = () => {
 		return b.wins - a.wins // Sort by wins by default
 	}
 
-	// Sort the playerData using the custom sort function
-	const sortedPlayerData = [...playerData].sort(customSort)
+	// Sort the players using the custom sort function
+	const sortedPlayerData = [...players].sort(customSort)
 
 	// Find all players with the most skinz
-	const mostSkinzPlayers = playerData.filter(
+	const mostSkinzPlayers = players.filter(
 		(player) => player.skinz === mostSkinzPlayer.skinz
 	)
 
@@ -114,7 +108,8 @@ const StandingsPage: React.FC = () => {
 
 	return (
 		<div className='results-container'>
-			{playerData.length === 8 &&
+			{players.length > 0 ? <NewPlayersButton /> : null}
+			{players.length === 8 &&
 			!!submittedResults &&
 			showWinners(submittedResults) ? (
 				<div className='winners-container'>
