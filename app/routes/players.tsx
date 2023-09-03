@@ -10,13 +10,18 @@ import {
 	TableRow,
 	Paper,
 	Hidden,
-	Alert
+	Alert,
+	Dialog,
+	DialogTitle,
+	DialogContentText,
+	DialogContent,
+	DialogActions
 } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import '../styles/players.css'
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import { V2_MetaFunction } from '@remix-run/node'
 
@@ -38,8 +43,9 @@ export interface Player {
 const PlayerForm: React.FC = () => {
 	const [players, setPlayers] = useState<Player[]>([]),
 		[newPlayerName, setNewPlayerName] = useState(''),
-		[localStorageMatchups, setLocalStorageMatchups] = useState([]),
-		[editingPlayer, setEditingPlayer] = useState<Player | null>(null)
+		[localStorageMatchups, setLocalStorageMatchups] = useState(),
+		[editingPlayer, setEditingPlayer] = useState<Player | null>(null),
+		[isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
 
 	// Load players from localStorage on component mount
 	useEffect(() => {
@@ -216,7 +222,7 @@ const PlayerForm: React.FC = () => {
 																	)
 																}
 															>
-																<SaveOutlinedIcon />
+																<CheckOutlinedIcon />
 															</Button>
 														) : null}
 													</Hidden>
@@ -239,11 +245,41 @@ const PlayerForm: React.FC = () => {
 															</Button>
 															<Button
 																variant='outlined'
-																color='secondary'
-																onClick={() => handleDeleteRow(player.id)}
+																color='error'
+																onClick={() => setIsConfirmDeleteOpen(true)}
 															>
 																<DeleteOutlineOutlinedIcon />
 															</Button>
+															<Dialog open={isConfirmDeleteOpen}>
+																<DialogTitle>Are you sure?</DialogTitle>
+																<DialogContent>
+																	<DialogContentText>
+																		This will delete {player.name} from the list
+																		of players.
+																	</DialogContentText>
+																</DialogContent>
+																<DialogActions>
+																	<Button
+																		variant='text'
+																		color='secondary'
+																		onClick={() =>
+																			setIsConfirmDeleteOpen(false)
+																		}
+																	>
+																		Cancel
+																	</Button>
+																	<Button
+																		variant='text'
+																		color='primary'
+																		onClick={() => {
+																			handleDeleteRow(player.id)
+																			setIsConfirmDeleteOpen(false)
+																		}}
+																	>
+																		Confirm
+																	</Button>
+																</DialogActions>
+															</Dialog>
 														</>
 													) : (
 														<Hidden smUp>
@@ -258,7 +294,7 @@ const PlayerForm: React.FC = () => {
 																		)
 																	}
 																>
-																	<SaveOutlinedIcon />
+																	<CheckOutlinedIcon />
 																</Button>
 															) : null}
 														</Hidden>
