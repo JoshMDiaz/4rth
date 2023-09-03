@@ -33,12 +33,18 @@
 	align-items: center;
 	flex-direction: column;
 	gap: 8px;
-
 	h2 {
 		margin: 0;
 	}
 	span {
 		font-weight: 700;
+		color: #4b83a6;
+	}
+	.winner-divider {
+		height: 1px;
+		width: 50%;
+		background: gray;
+		margin: auto;
 	}
 }
 

@@ -38,6 +38,13 @@
 }
 .winner span {
   font-weight: 700;
+  color: #4b83a6;
+}
+.winner .winner-divider {
+  height: 1px;
+  width: 50%;
+  background: gray;
+  margin: auto;
 }
 
 .results-container {

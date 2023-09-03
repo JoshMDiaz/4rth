@@ -111,17 +111,6 @@ const PlayerForm: React.FC = () => {
 		setEditingPlayer(null)
 	}
 
-	const handleClearTable = () => {
-		setPlayers([])
-		setNewPlayerName('')
-		setEditingPlayer(null)
-		localStorage.removeItem('matchups')
-		localStorage.removeItem('teamInputScores')
-		localStorage.removeItem('players')
-		localStorage.removeItem('submittedScores')
-		localStorage.removeItem('teamPoints')
-	}
-
 	const handleDeleteRow = (id: number) => {
 		const updatedPlayers = players.filter((player) => player.id !== id)
 		setPlayers(updatedPlayers)
@@ -171,9 +160,6 @@ const PlayerForm: React.FC = () => {
 						<GenerateMatchups redirect />
 					)}
 				</div>
-				<Button variant='text' color='error' onClick={handleClearTable}>
-					Clear Table
-				</Button>
 			</Paper>
 			<Paper>
 				{players.length > 0 ? (

@@ -101,12 +101,13 @@ const StandingsPage: React.FC = () => {
 	const Winner = ({ header, placeIndex = 0, skinz }: WinnerProps) => {
 		return (
 			<Paper className='winner'>
-				<span>{header}</span>
 				{skinz && mostSkinzPlayers.length > 0 ? (
 					<h2>{mostSkinzPlayers.map((player) => player.name).join(', ')}</h2>
 				) : sortedPlayerData.length > 0 ? (
 					<h2>{sortedPlayerData[placeIndex].name}</h2>
 				) : null}
+				<div className='winner-divider' />
+				<span>{header}</span>
 			</Paper>
 		)
 	}
