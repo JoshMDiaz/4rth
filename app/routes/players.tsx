@@ -140,26 +140,26 @@ const PlayerForm: React.FC = () => {
 	return (
 		<div>
 			<Paper className='players-header'>
-				<div className='players-text-input flex-container'>
-					{!playerListFull ? (
-						<>
-							<TextField
-								label='Player Name'
-								value={newPlayerName}
-								onChange={handlePlayerNameChange}
-								onKeyDown={handleAddPlayerKeyDown}
-								disabled={playerListFull}
-								className='player-name'
-							/>
+				{!playerListFull ? (
+					<div className='flex-container'>
+						<TextField
+							label='Player Name'
+							value={newPlayerName}
+							onChange={handlePlayerNameChange}
+							onKeyDown={handleAddPlayerKeyDown}
+							disabled={playerListFull}
+							className='player-name'
+						/>
 
-							<Button variant='outlined' color='primary' onClick={addPlayer}>
-								<AddOutlinedIcon />
-							</Button>
-						</>
-					) : (
+						<Button variant='outlined' color='primary' onClick={addPlayer}>
+							<AddOutlinedIcon />
+						</Button>
+					</div>
+				) : (
+					<div className='generate-container'>
 						<GenerateMatchups redirect />
-					)}
-				</div>
+					</div>
+				)}
 			</Paper>
 			<Paper>
 				{players.length > 0 ? (
