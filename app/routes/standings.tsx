@@ -1,17 +1,9 @@
 import React from 'react'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Paper
-} from '@mui/material'
 import '../styles/standings.css'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
 import Winners from '~/components/Winners'
+import StandingsTable from '~/components/tables/StandingsTable'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -37,28 +29,7 @@ const StandingsPage: React.FC = () => {
 	return (
 		<div className='results-container'>
 			<Winners players={sortedPlayerData} />
-			<TableContainer component={Paper}>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Player Name</TableCell>
-							<TableCell>Total Wins</TableCell>
-							<TableCell>Total Points</TableCell>
-							<TableCell>Total Skinz</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{sortedPlayerData.map((player) => (
-							<TableRow key={player.id}>
-								<TableCell>{player.name}</TableCell>
-								<TableCell>{player.wins}</TableCell>
-								<TableCell>{player.points}</TableCell>
-								<TableCell>{player.skinz}</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			<StandingsTable players={sortedPlayerData} />
 		</div>
 	)
 }

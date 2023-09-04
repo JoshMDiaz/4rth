@@ -61,8 +61,8 @@ const SkinzDrawer = (): JSX.Element => {
 			</Zoom>
 			<Drawer anchor='right' open={isOpen} onClose={toggleDrawer}>
 				<div className='drawer-container'>
-					<DrawerHeader title='Skinz' closeDrawer={toggleDrawer} />
-					<TableContainer>
+					<DrawerHeader closeDrawer={toggleDrawer} />
+					<TableContainer className='table-container'>
 						<Table>
 							<TableHead>
 								<TableRow>
