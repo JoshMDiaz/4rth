@@ -15,7 +15,6 @@ const Nav = ({}: NavProps): JSX.Element => {
 		[value, setValue] = useState(pageName),
 		navigate = useNavigate(),
 		[matchups] = useMatchups()
-	console.log(matchups)
 
 	const navChange = (name: string) => {
 		navigate(`/${name}`)

@@ -34,9 +34,5 @@ export const useMatchups = (): [
 		localStorage.setItem('matchups', JSON.stringify(newMatchups))
 	}
 
-	useEffect(() => {
-		console.log('useMatchups', matchups)
-	}, [matchups])
-
 	return [matchups, updateMatchups]
 }
