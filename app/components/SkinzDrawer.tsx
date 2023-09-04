@@ -7,7 +7,9 @@ import {
 	TableRow,
 	TableCell,
 	TableBody,
-	IconButton
+	IconButton,
+	Zoom,
+	Fab
 } from '@mui/material'
 import { useState } from 'react'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
@@ -15,6 +17,7 @@ import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 import '../styles/skins-drawer.css'
 import { usePlayers } from '~/hooks/usePlayers'
 import DrawerHeader from './DrawerHeader'
+import theme from '~/theme'
 
 const SkinzDrawer = (): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false),
@@ -37,11 +40,25 @@ const SkinzDrawer = (): JSX.Element => {
 		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 
+	const transitionDuration = {
+		enter: theme.transitions.duration.enteringScreen,
+		exit: theme.transitions.duration.leavingScreen
+	}
+
 	return (
 		<>
-			<Button variant='outlined' onClick={toggleDrawer}>
-				Skinz
-			</Button>
+			<Zoom
+				in
+				timeout={transitionDuration}
+				style={{
+					transitionDelay: `${transitionDuration.exit}ms`
+				}}
+				unmountOnExit
+			>
+				<Fab color='secondary' className='skinz-button' onClick={toggleDrawer}>
+					Skinz
+				</Fab>
+			</Zoom>
 			<Drawer anchor='right' open={isOpen} onClose={toggleDrawer}>
 				<div className='drawer-container'>
 					<DrawerHeader title='Skinz' closeDrawer={toggleDrawer} />

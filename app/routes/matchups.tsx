@@ -303,7 +303,6 @@ const Matchups: React.FC = () => {
 				<Paper key={roundIndex} className='round-container'>
 					<div className='round-header'>
 						<h2>Round {roundIndex + 1}</h2>
-						<SkinzDrawer />
 					</div>
 					<div className='round-content'>
 						{round.map((matchup, matchupIndex) =>
@@ -312,6 +311,7 @@ const Matchups: React.FC = () => {
 					</div>
 				</Paper>
 			))}
+			<SkinzDrawer />
 		</div>
 	)
 }
