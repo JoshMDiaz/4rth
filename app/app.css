@@ -8,12 +8,6 @@ header {
 	border-bottom: 1px solid gray;
 	display: flex;
 	justify-content: center;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	background: #fff;
-	z-index: 1;
 }
 
 .nav {
@@ -26,9 +20,9 @@ header {
 }
 
 .content-container {
-	height: calc(100vh - 56px);
+	height: calc(100vh - 144px);
 	overflow-y: auto;
-	padding: 102px 16px 16px;
+	padding: 16px;
 	background-color: #f2f4fd;
 }
 
