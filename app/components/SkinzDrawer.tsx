@@ -10,27 +10,19 @@ import {
 	TableBody
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { Player } from '~/routes/players'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import '../styles/skins-drawer.css'
+import { usePlayers } from '~/hooks/usePlayers'
 
 const SkinzDrawer = (): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false),
-		[players, setPlayers] = useState<Player[]>([])
+		[players, updatePlayers] = usePlayers()
 
 	const toggleDrawer = () => {
 		setIsOpen(!isOpen)
 	}
-
-	// Load players from localStorage on component mount
-	useEffect(() => {
-		const savedPlayers = localStorage.getItem('players')
-		if (savedPlayers) {
-			setPlayers(JSON.parse(savedPlayers))
-		}
-	}, [isOpen])
 
 	const updateSkinz = (id: number, type: 'add' | 'subtract') => {
 		const updatedPlayers = players.map((player) =>
@@ -41,7 +33,7 @@ const SkinzDrawer = (): JSX.Element => {
 				  }
 				: player
 		)
-		setPlayers(updatedPlayers)
+		updatePlayers(updatedPlayers)
 		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 

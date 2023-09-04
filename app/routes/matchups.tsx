@@ -9,6 +9,7 @@ import { usePlayers } from '~/hooks/usePlayers'
 import { useNavigate } from '@remix-run/react'
 import NewPlayersButton from '~/components/NewPlayersButton'
 import { Matchup, useMatchups } from '~/hooks/useMatchups'
+import { useScores } from '~/hooks/useScores'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -24,22 +25,13 @@ const Matchups: React.FC = () => {
 	const [teamPoints, setTeamPoints] = useState<
 			Record<string, Record<string, Record<string, number>>>
 		>({}),
-		[submittedResults, setSubmittedResults] = useState<
-			Record<string, Record<string, boolean>>
-		>({}),
 		[teamInputScores, setTeamInputScores] = useState<
 			Record<string, Record<string, Record<string, number>>> | undefined
 		>(),
 		[players, _, loadingPlayers] = usePlayers(),
 		[matchups] = useMatchups(),
-		navigate = useNavigate()
-
-	useEffect(() => {
-		const submittedScores = localStorage.getItem('submittedScores')
-		if (submittedScores) {
-			setSubmittedResults(JSON.parse(submittedScores))
-		}
-	}, [])
+		navigate = useNavigate(),
+		[scores, updateScores] = useScores()
 
 	useEffect(() => {
 		const saveTeamInputScores = localStorage.getItem('teamInputScores')
@@ -170,17 +162,7 @@ const Matchups: React.FC = () => {
 
 		updateWins(matchupWinners, 'add')
 		updatePlayerPoints({ roundNumber, matchupNumber, type: 'add' })
-		setSubmittedResults((prevState) => {
-			const results = {
-				...prevState,
-				[roundNumber]: {
-					...prevState[roundNumber],
-					[matchupNumber]: true
-				}
-			}
-			localStorage.setItem('submittedScores', JSON.stringify(results))
-			return results
-		})
+		updateScores({ roundNumber, matchupNumber, scoreSubmitted: true })
 	}
 
 	const handleEditScores = ({
@@ -190,25 +172,13 @@ const Matchups: React.FC = () => {
 		roundIndex: number
 		matchupIndex: number
 	}) => {
-		setSubmittedResults((prevState) => {
-			const results = {
-				...prevState,
-				[roundNumber]: {
-					...prevState[roundNumber],
-					[matchupNumber]: false
-				}
-			}
-			localStorage.setItem('submittedScores', JSON.stringify(results))
-			return results
-		})
-
 		const roundNumber = `round${roundIndex + 1}`,
 			matchupNumber = `matchup${matchupIndex + 1}`,
 			matchupData = teamPoints?.[roundNumber]?.[matchupNumber],
 			matchupWinners = findWinners(matchupData)
-
 		updateWins(matchupWinners, 'subtract')
 		updatePlayerPoints({ roundNumber, matchupNumber, type: 'subtract' })
+		updateScores({ roundNumber, matchupNumber, scoreSubmitted: false })
 	}
 
 	const renderMatchup = (
@@ -225,7 +195,7 @@ const Matchups: React.FC = () => {
 			roundNumber = `round${roundIndex + 1}`,
 			matchupNumber = `matchup${matchupIndex + 1}`,
 			roundMatchup = teamPoints?.[roundNumber]?.[matchupNumber],
-			scoreSubmitted = !!submittedResults?.[roundNumber]?.[matchupNumber]
+			scoreSubmitted = !!scores?.[roundNumber]?.[matchupNumber]
 
 		return (
 			<div key={matchupIndex} className='court-container'>

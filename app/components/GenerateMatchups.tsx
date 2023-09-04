@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useNavigate } from '@remix-run/react'
-import { Player } from '~/hooks/usePlayers'
+import { Player, usePlayers } from '~/hooks/usePlayers'
 import { Matchup, useMatchups } from '~/hooks/useMatchups'
 
 type GenerateMatchupsProps = {
@@ -9,8 +9,8 @@ type GenerateMatchupsProps = {
 }
 
 const GenerateMatchups = ({ redirect }: GenerateMatchupsProps): JSX.Element => {
-	const [players, setPlayers] = useState<Player[]>([]),
-		[matchups, updateMatchups] = useMatchups(),
+	const [players] = usePlayers(),
+		[_, updateMatchups] = useMatchups(),
 		navigate = useNavigate()
 
 	// const generate = () => {
@@ -127,13 +127,6 @@ const GenerateMatchups = ({ redirect }: GenerateMatchupsProps): JSX.Element => {
 			alert('You need exactly 8 players to generate matchups.')
 		}
 	}
-
-	useEffect(() => {
-		const players = localStorage.getItem('players')
-		if (players) {
-			setPlayers(JSON.parse(players))
-		}
-	}, [])
 
 	return (
 		<Button variant='contained' color='primary' onClick={generate}>

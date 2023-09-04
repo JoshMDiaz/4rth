@@ -12,6 +12,7 @@ import '../styles/standings.css'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
 import NewPlayersButton from '~/components/NewPlayersButton'
+import { useScores } from '~/hooks/useScores'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -22,14 +23,7 @@ export const meta: V2_MetaFunction = () => {
 
 const StandingsPage: React.FC = () => {
 	const [players] = usePlayers(),
-		[submittedResults, setSubmittedResults] = useState<SubmittedResultsType>()
-
-	useEffect(() => {
-		const submittedScores = localStorage.getItem('submittedScores')
-		if (submittedScores) {
-			setSubmittedResults(JSON.parse(submittedScores))
-		}
-	}, [])
+		[scores] = useScores()
 
 	const mostSkinzPlayer = players.reduce((maxSkinzPlayer, player) => {
 		if (player.skinz > maxSkinzPlayer.skinz) {
@@ -109,9 +103,7 @@ const StandingsPage: React.FC = () => {
 	return (
 		<div className='results-container'>
 			{players.length > 0 ? <NewPlayersButton /> : null}
-			{players.length === 8 &&
-			!!submittedResults &&
-			showWinners(submittedResults) ? (
+			{players.length === 8 && !!scores && showWinners(scores) ? (
 				<div className='winners-container'>
 					<Winner header='1st' placeIndex={0} />
 					<Winner header='2nd' placeIndex={1} />
