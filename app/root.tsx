@@ -10,7 +10,6 @@ import {
 } from '@remix-run/react'
 import Nav from './components/Nav'
 import logo from './images/logo-black.svg'
-import NewPlayersButton from './components/NewPlayersButton'
 
 export const links: LinksFunction = () => [
 	...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])
