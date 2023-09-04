@@ -46,5 +46,5 @@ header {
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #f2f4fd;
+	background-color: #f2f4fd !important;
 }
