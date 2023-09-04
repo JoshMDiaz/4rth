@@ -10,4 +10,8 @@
   margin: 0;
 }
 
+.collapse-button {
+  transform: rotate(-90deg);
+}
+
 /*# sourceMappingURL=drawer-header.css.map */

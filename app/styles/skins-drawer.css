@@ -1,7 +1,6 @@
 .drawer-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
 .buttons {
@@ -14,6 +13,10 @@ button.skinz-button {
   position: fixed;
   bottom: 72px;
   right: 16px;
+}
+
+.table-container {
+  padding: 0 16px;
 }
 
 /*# sourceMappingURL=skins-drawer.css.map */
