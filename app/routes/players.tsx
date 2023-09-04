@@ -15,18 +15,18 @@ import {
 	DialogTitle,
 	DialogContentText,
 	DialogContent,
-	DialogActions
+	DialogActions,
+	IconButton
 } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import '../styles/players.css'
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
-import NewPlayersButton from '~/components/NewPlayersButton'
 import { useMatchups } from '~/hooks/useMatchups'
+import SendIcon from '@mui/icons-material/Send'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -135,7 +135,6 @@ const PlayerForm: React.FC = () => {
 
 	return (
 		<div>
-			{players.length > 0 ? <NewPlayersButton /> : null}
 			{matchups.length === 0 ? (
 				<Paper className='players-header'>
 					{!playerListFull ? (
@@ -149,9 +148,9 @@ const PlayerForm: React.FC = () => {
 								className='player-name'
 							/>
 
-							<Button variant='outlined' color='primary' onClick={addPlayer}>
-								<AddOutlinedIcon />
-							</Button>
+							<IconButton color='primary' onClick={addPlayer}>
+								<SendIcon />
+							</IconButton>
 						</div>
 					) : (
 						<div className='generate-container'>
@@ -197,8 +196,7 @@ const PlayerForm: React.FC = () => {
 													/>
 													<Hidden smDown>
 														{editingPlayer?.id === player.id ? (
-															<Button
-																variant='outlined'
+															<IconButton
 																color='primary'
 																onClick={() =>
 																	saveEditedName(
@@ -208,7 +206,7 @@ const PlayerForm: React.FC = () => {
 																}
 															>
 																<CheckOutlinedIcon />
-															</Button>
+															</IconButton>
 														) : null}
 													</Hidden>
 												</div>
@@ -221,22 +219,20 @@ const PlayerForm: React.FC = () => {
 												<div className='player-action-buttons'>
 													{editingPlayer?.id !== player.id ? (
 														<>
-															<Button
-																variant='outlined'
+															<IconButton
 																color='primary'
 																onClick={() => editPlayerName(player)}
 															>
 																<EditOutlinedIcon />
-															</Button>
-															<Button
-																variant='outlined'
+															</IconButton>
+															<IconButton
 																color='error'
 																onClick={() =>
 																	openDeletePlayerDialog(player.id)
 																}
 															>
 																<DeleteOutlineOutlinedIcon />
-															</Button>
+															</IconButton>
 															<Dialog open={isConfirmDeleteOpen[player.id]}>
 																<DialogTitle>Are you sure?</DialogTitle>
 																<DialogContent>
