@@ -1,7 +1,6 @@
 import {
 	Button,
 	Drawer,
-	Paper,
 	TableContainer,
 	Table,
 	TableHead,
