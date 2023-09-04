@@ -5,9 +5,10 @@ import '../styles/matchups.css'
 import NumberInput from '~/components/NumberInput'
 import SkinzDrawer from '~/components/SkinzDrawer'
 import { V2_MetaFunction } from '@remix-run/node'
-import { Player, usePlayers } from '~/hooks/usePlayers'
+import { usePlayers } from '~/hooks/usePlayers'
 import { useNavigate } from '@remix-run/react'
 import NewPlayersButton from '~/components/NewPlayersButton'
+import { Matchup, useMatchups } from '~/hooks/useMatchups'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -19,23 +20,8 @@ export const meta: V2_MetaFunction = () => {
 	]
 }
 
-type Matchups = Array<Matchup[]>
-
-interface RoundResult {
-	team1Score: number
-	team2Score: number
-	winner: 'team1' | 'team2' | null
-}
-
-export type Matchup = {
-	team1: [Player | null, Player | null]
-	team2: [Player | null, Player | null]
-	result?: RoundResult | null
-}
-
 const Matchups: React.FC = () => {
-	const [matchups, setMatchups] = useState<Matchup[][]>([]),
-		[teamPoints, setTeamPoints] = useState<
+	const [teamPoints, setTeamPoints] = useState<
 			Record<string, Record<string, Record<string, number>>>
 		>({}),
 		[submittedResults, setSubmittedResults] = useState<
@@ -45,14 +31,8 @@ const Matchups: React.FC = () => {
 			Record<string, Record<string, Record<string, number>>> | undefined
 		>(),
 		[players, _, loadingPlayers] = usePlayers(),
+		[matchups] = useMatchups(),
 		navigate = useNavigate()
-
-	useEffect(() => {
-		const savedMatchups = localStorage.getItem('matchups')
-		if (savedMatchups) {
-			setMatchups(JSON.parse(savedMatchups))
-		}
-	}, [])
 
 	useEffect(() => {
 		const submittedScores = localStorage.getItem('submittedScores')
@@ -349,7 +329,7 @@ const Matchups: React.FC = () => {
 		return (
 			<Paper className='flex justify-content-center p-16'>
 				<ShowNewPlayersButton />
-				<GenerateMatchups setMatchups={setMatchups} />
+				<GenerateMatchups />
 			</Paper>
 		)
 	}

@@ -5,6 +5,7 @@ import AllInclusiveOutlinedIcon from '@mui/icons-material/AllInclusiveOutlined'
 import { useNavigate, useLocation } from '@remix-run/react'
 import 'app/app.css'
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
+import { useMatchups } from '~/hooks/useMatchups'
 
 type NavProps = {}
 
@@ -12,7 +13,9 @@ const Nav = ({}: NavProps): JSX.Element => {
 	const { pathname } = useLocation(),
 		pageName = pathname.split('/')[1],
 		[value, setValue] = useState(pageName),
-		navigate = useNavigate()
+		navigate = useNavigate(),
+		[matchups] = useMatchups()
+	console.log(matchups)
 
 	const navChange = (name: string) => {
 		navigate(`/${name}`)
@@ -34,17 +37,17 @@ const Nav = ({}: NavProps): JSX.Element => {
 			>
 				<BottomNavigationAction
 					label='Players'
-					value='Players'
+					value='players'
 					icon={<GroupOutlinedIcon />}
 				/>
 				<BottomNavigationAction
 					label='Matchups'
-					value='Matchups'
+					value='matchups'
 					icon={<AllInclusiveOutlinedIcon />}
 				/>
 				<BottomNavigationAction
 					label='Standings'
-					value='Standings'
+					value='standings'
 					icon={<CheckOutlinedIcon />}
 				/>
 			</BottomNavigation>

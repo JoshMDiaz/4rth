@@ -26,8 +26,10 @@
   }
 }
 
-.justify-end {
-  justify-content: flex-end;
+.player-action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: end;
 }
 
 .generate-container {

@@ -26,6 +26,7 @@ import GenerateMatchups from '~/components/GenerateMatchups'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
 import NewPlayersButton from '~/components/NewPlayersButton'
+import { useMatchups } from '~/hooks/useMatchups'
 
 export const meta: V2_MetaFunction = () => {
 	return [
@@ -36,19 +37,12 @@ export const meta: V2_MetaFunction = () => {
 
 const PlayerForm: React.FC = () => {
 	const [players, updatePlayers] = usePlayers(),
+		[matchups] = useMatchups(),
 		[newPlayerName, setNewPlayerName] = useState(''),
-		[localStorageMatchups, setLocalStorageMatchups] = useState(),
 		[editingPlayer, setEditingPlayer] = useState<Player | null>(null),
 		[isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState<
 			Record<string, boolean>
 		>({})
-
-	useEffect(() => {
-		const matchups = localStorage.getItem('matchups')
-		if (matchups) {
-			setLocalStorageMatchups(JSON.parse(matchups))
-		}
-	}, [])
 
 	// Save players to localStorage whenever players change
 	useEffect(() => {
@@ -142,7 +136,7 @@ const PlayerForm: React.FC = () => {
 	return (
 		<div>
 			{players.length > 0 ? <NewPlayersButton /> : null}
-			{!localStorageMatchups ? (
+			{matchups.length === 0 ? (
 				<Paper className='players-header'>
 					{!playerListFull ? (
 						<div className='flex-container'>
@@ -223,8 +217,8 @@ const PlayerForm: React.FC = () => {
 											)}
 										</TableCell>
 										<TableCell>
-											{!localStorageMatchups ? (
-												<div className='flex-container justify-end'>
+											{matchups.length === 0 ? (
+												<div className='player-action-buttons'>
 													{editingPlayer?.id !== player.id ? (
 														<>
 															<Button
