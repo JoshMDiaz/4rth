@@ -9,7 +9,7 @@ import {
 	ScrollRestoration
 } from '@remix-run/react'
 import Nav from './components/Nav'
-import logo from './images/logo-black.svg'
+import Header from './components/Header'
 
 export const links: LinksFunction = () => [
 	...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])
@@ -26,9 +26,7 @@ export default function App() {
 			</head>
 			<body>
 				<div className='app-container'>
-					<header>
-						<img height={70} src={logo} id='logo' />
-					</header>
+					<Header />
 					<div className='content-container'>
 						<Outlet />
 					</div>

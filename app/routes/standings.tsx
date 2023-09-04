@@ -11,7 +11,6 @@ import {
 import '../styles/standings.css'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
-import NewPlayersButton from '~/components/NewPlayersButton'
 import Winners from '~/components/Winners'
 
 export const meta: V2_MetaFunction = () => {
@@ -37,7 +36,6 @@ const StandingsPage: React.FC = () => {
 
 	return (
 		<div className='results-container'>
-			{players.length > 0 ? <NewPlayersButton /> : null}
 			<Winners players={sortedPlayerData} />
 			<TableContainer component={Paper}>
 				<Table>

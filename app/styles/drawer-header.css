@@ -1,0 +1,13 @@
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid gray;
+}
+.drawer-header h2 {
+  margin: 0;
+}
+
+/*# sourceMappingURL=drawer-header.css.map */

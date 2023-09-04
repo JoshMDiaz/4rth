@@ -6,14 +6,15 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	TableBody
+	TableBody,
+	IconButton
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import '../styles/skins-drawer.css'
 import { usePlayers } from '~/hooks/usePlayers'
+import DrawerHeader from './DrawerHeader'
 
 const SkinzDrawer = (): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false),
@@ -38,17 +39,12 @@ const SkinzDrawer = (): JSX.Element => {
 
 	return (
 		<>
-			<Button variant='text' onClick={toggleDrawer}>
+			<Button variant='outlined' onClick={toggleDrawer}>
 				Skinz
 			</Button>
 			<Drawer anchor='right' open={isOpen} onClose={toggleDrawer}>
 				<div className='drawer-container'>
-					<div className='drawer-header'>
-						<h2>Skinz</h2>
-						<Button variant='text' color='primary' onClick={toggleDrawer}>
-							<CloseOutlinedIcon />
-						</Button>
-					</div>
+					<DrawerHeader title='Skinz' closeDrawer={toggleDrawer} />
 					<TableContainer>
 						<Table>
 							<TableHead>
@@ -64,20 +60,20 @@ const SkinzDrawer = (): JSX.Element => {
 										<TableCell>{player.name}</TableCell>
 										<TableCell>{player.skinz}</TableCell>
 										<TableCell>
-											<Button
-												variant='text'
-												color='primary'
-												onClick={() => updateSkinz(player.id, 'subtract')}
-											>
-												<RemoveOutlinedIcon />
-											</Button>
-											<Button
-												variant='text'
-												color='primary'
-												onClick={() => updateSkinz(player.id, 'add')}
-											>
-												<AddOutlinedIcon />
-											</Button>
+											<div className='buttons'>
+												<IconButton
+													color='secondary'
+													onClick={() => updateSkinz(player.id, 'subtract')}
+												>
+													<RemoveOutlinedIcon />
+												</IconButton>
+												<IconButton
+													color='primary'
+													onClick={() => updateSkinz(player.id, 'add')}
+												>
+													<AddOutlinedIcon />
+												</IconButton>
+											</div>
 										</TableCell>
 									</TableRow>
 								))}

@@ -7,7 +7,6 @@ import SkinzDrawer from '~/components/SkinzDrawer'
 import { V2_MetaFunction } from '@remix-run/node'
 import { usePlayers } from '~/hooks/usePlayers'
 import { useNavigate } from '@remix-run/react'
-import NewPlayersButton from '~/components/NewPlayersButton'
 import { Matchup, useMatchups } from '~/hooks/useMatchups'
 import { useScores } from '~/hooks/useScores'
 
@@ -272,10 +271,6 @@ const Matchups: React.FC = () => {
 		)
 	}
 
-	const ShowNewPlayersButton = () => {
-		return players.length > 0 ? <NewPlayersButton /> : null
-	}
-
 	if (loadingPlayers) {
 		return null
 	}
@@ -283,7 +278,6 @@ const Matchups: React.FC = () => {
 	if (players.length !== 8) {
 		return (
 			<Paper className='flex justify-content-center p-16'>
-				<ShowNewPlayersButton />
 				<Button
 					variant='contained'
 					color='primary'
@@ -298,7 +292,6 @@ const Matchups: React.FC = () => {
 	if (matchups.length === 0) {
 		return (
 			<Paper className='flex justify-content-center p-16'>
-				<ShowNewPlayersButton />
 				<GenerateMatchups />
 			</Paper>
 		)
@@ -306,7 +299,6 @@ const Matchups: React.FC = () => {
 
 	return (
 		<div className='matchups-container'>
-			<ShowNewPlayersButton />
 			{matchups.map((round, roundIndex) => (
 				<Paper key={roundIndex} className='round-container'>
 					<div className='round-header'>
