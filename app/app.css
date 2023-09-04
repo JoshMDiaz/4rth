@@ -24,7 +24,6 @@ header {
 }
 
 .content-container {
-	/* height: calc(100vh - 144px); */
 	overflow-y: auto;
 	padding: 16px;
 	background-color: #f2f4fd;
@@ -47,4 +46,5 @@ header {
 body {
 	margin: 0;
 	padding: 0;
+	background-color: #f2f4fd;
 }
