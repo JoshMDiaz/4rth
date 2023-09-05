@@ -27,10 +27,6 @@ const TeamScore = ({
 		.map((player) => (player ? player.name : 'TBD'))
 		.join(' / ')
 
-	const updateLocalStorage = (key: string, data: any) => {
-		localStorage.setItem(key, JSON.stringify(data))
-	}
-
 	const updateTeamPoints = (team: 'team1' | 'team2', score: number) => {
 		const teamPoints = JSON.parse(localStorage.getItem('teamPoints') ?? '{}')
 

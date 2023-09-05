@@ -1,6 +1,5 @@
 import { Button } from '@mui/material'
 import { Matchup } from '~/hooks/useMatchups'
-import NumberInput from '../NumberInput'
 import { useScores } from '~/hooks/useScores'
 import { Player } from '~/hooks/usePlayers'
 import { useEffect, useState } from 'react'
@@ -25,12 +24,6 @@ const MatchupCard = ({
 		[teamInputScores, setTeamInputScores] = useState<
 			Record<string, Record<string, Record<string, number>>> | undefined
 		>(),
-		team1Players = matchup.team1
-			.map((player) => (player ? player.name : 'TBD'))
-			.join(' / '),
-		team2Players = matchup.team2
-			.map((player) => (player ? player.name : 'TBD'))
-			.join(' / '),
 		[scores, updateScores] = useScores(),
 		roundNumber = `round${roundIndex + 1}`,
 		matchupNumber = `matchup${matchupIndex + 1}`,
