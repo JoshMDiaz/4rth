@@ -1,7 +1,6 @@
 .drawer-container {
 	display: flex;
 	flex-direction: column;
-	// gap: 16px;
 }
 
 .buttons {
@@ -18,4 +17,7 @@ button.skinz-button {
 
 .table-container {
 	padding: 0 16px;
+	display: flex;
+	gap: 16px;
+	flex-direction: column;
 }

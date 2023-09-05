@@ -62,41 +62,46 @@ const SkinzDrawer = (): JSX.Element => {
 			<Drawer anchor='right' open={isOpen} onClose={toggleDrawer}>
 				<div className='drawer-container'>
 					<DrawerHeader closeDrawer={toggleDrawer} />
-					<TableContainer className='table-container'>
-						<Table>
-							<TableHead>
-								<TableRow>
-									<TableCell>Name</TableCell>
-									<TableCell>Skinz</TableCell>
-									<TableCell />
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{players.map((player) => (
-									<TableRow key={player.id}>
-										<TableCell>{player.name}</TableCell>
-										<TableCell>{player.skinz}</TableCell>
-										<TableCell>
-											<div className='buttons'>
-												<IconButton
-													color='secondary'
-													onClick={() => updateSkinz(player.id, 'subtract')}
-												>
-													<RemoveOutlinedIcon />
-												</IconButton>
-												<IconButton
-													color='primary'
-													onClick={() => updateSkinz(player.id, 'add')}
-												>
-													<AddOutlinedIcon />
-												</IconButton>
-											</div>
-										</TableCell>
+					<div className='table-container'>
+						<TableContainer>
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableCell>Name</TableCell>
+										<TableCell>Skinz</TableCell>
+										<TableCell />
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</TableContainer>
+								</TableHead>
+								<TableBody>
+									{players.map((player) => (
+										<TableRow key={player.id}>
+											<TableCell>{player.name}</TableCell>
+											<TableCell>{player.skinz}</TableCell>
+											<TableCell>
+												<div className='buttons'>
+													<IconButton
+														color='secondary'
+														onClick={() => updateSkinz(player.id, 'subtract')}
+													>
+														<RemoveOutlinedIcon />
+													</IconButton>
+													<IconButton
+														color='primary'
+														onClick={() => updateSkinz(player.id, 'add')}
+													>
+														<AddOutlinedIcon />
+													</IconButton>
+												</div>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</TableContainer>
+						<Button variant='outlined' color='primary' onClick={toggleDrawer}>
+							Done
+						</Button>
+					</div>
 				</div>
 			</Drawer>
 		</>

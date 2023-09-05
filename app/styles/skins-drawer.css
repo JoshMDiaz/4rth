@@ -17,6 +17,9 @@ button.skinz-button {
 
 .table-container {
   padding: 0 16px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
 }
 
 /*# sourceMappingURL=skins-drawer.css.map */
