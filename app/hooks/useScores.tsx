@@ -25,17 +25,16 @@ export const useScores = (): [Scores, (obj: UpdateScoresType) => void] => {
 		matchupNumber,
 		scoreSubmitted
 	}: UpdateScoresType) => {
-		setScores((prevState) => {
-			const results = {
-				...prevState,
-				[roundNumber]: {
-					...prevState[roundNumber],
-					[matchupNumber]: scoreSubmitted
-				}
+		const scores = JSON.parse(localStorage.getItem('submittedScores') ?? '{}')
+		const results = {
+			...scores,
+			[roundNumber]: {
+				...scores[roundNumber],
+				[matchupNumber]: scoreSubmitted
 			}
-			localStorage.setItem('submittedScores', JSON.stringify(results))
-			return results
-		})
+		}
+		localStorage.setItem('submittedScores', JSON.stringify(results))
+		setScores(results)
 	}
 
 	return [scores, updateScores]
