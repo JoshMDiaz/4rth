@@ -29,7 +29,6 @@ const TeamScore = ({
 
 	const updateTeamPoints = (team: 'team1' | 'team2', score: number) => {
 		const teamPoints = JSON.parse(localStorage.getItem('teamPoints') ?? '{}')
-
 		const newPoints = {
 			...teamPoints,
 			[roundNumber]: {
@@ -41,7 +40,6 @@ const TeamScore = ({
 				}
 			}
 		}
-
 		localStorage.setItem('teamPoints', JSON.stringify(newPoints))
 		setTeamPoints(newPoints)
 	}
@@ -50,8 +48,6 @@ const TeamScore = ({
 		const teamInputScores = JSON.parse(
 			localStorage.getItem('teamInputScores') ?? '{}'
 		)
-		console.log('get', teamInputScores)
-
 		const newScores = {
 			...teamInputScores,
 			[roundNumber]: {
@@ -62,8 +58,6 @@ const TeamScore = ({
 				}
 			}
 		}
-		console.log('new', newScores)
-
 		localStorage.setItem('teamInputScores', JSON.stringify(newScores))
 		setTeamInputScores(newScores)
 	}
