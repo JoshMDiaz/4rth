@@ -190,10 +190,6 @@ const MatchupCard = ({
 		updateScores({ roundNumber, matchupNumber, scoreSubmitted: false })
 	}
 
-	// if (roundIndex === 0) {
-	// 	console.log('matchup', matchup)
-	// }
-
 	return (
 		<div key={matchupIndex} className='court-container'>
 			<h3>Court {matchupIndex + 1}</h3>
