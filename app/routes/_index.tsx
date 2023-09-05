@@ -16,7 +16,7 @@ export default function Index() {
 
 	useEffect(() => {
 		if (pathname === '/') {
-			navigate('/Players')
+			navigate('/players')
 		}
 	}, [])
 

@@ -18,8 +18,18 @@ const MatchupCard = ({
 	roundIndex,
 	matchupIndex
 }: MatchupCardProps): JSX.Element => {
-	const [teamPoints, setTeamPoints] = useState<Record<string, any>>({}),
-		[teamInputScores, setTeamInputScores] = useState<Record<string, any>>(),
+	const [teamPoints, setTeamPoints] = useState<
+			Record<string, Record<string, Record<string, number>>>
+		>({}),
+		[teamInputScores, setTeamInputScores] = useState<
+			Record<string, Record<string, Record<string, number>>> | undefined
+		>(),
+		team1Players = matchup.team1
+			.map((player) => (player ? player.name : 'TBD'))
+			.join(' / '),
+		team2Players = matchup.team2
+			.map((player) => (player ? player.name : 'TBD'))
+			.join(' / '),
 		[scores, updateScores] = useScores(),
 		roundNumber = `round${roundIndex + 1}`,
 		matchupNumber = `matchup${matchupIndex + 1}`,
@@ -27,20 +37,82 @@ const MatchupCard = ({
 		scoreSubmitted = !!scores?.[roundNumber]?.[matchupNumber]
 
 	useEffect(() => {
-		const loadDataFromLocalStorage = (key: string, setState: Function) => {
-			const savedData = localStorage.getItem(key)
-			if (savedData) {
-				setState(JSON.parse(savedData))
+		const saveTeamInputScores = localStorage.getItem('teamInputScores')
+		if (saveTeamInputScores) {
+			setTeamInputScores(JSON.parse(saveTeamInputScores))
+		}
+	}, [])
+
+	useEffect(() => {
+		const savedTeamPoints = localStorage.getItem('teamPoints')
+		if (savedTeamPoints) {
+			setTeamPoints(JSON.parse(savedTeamPoints))
+		}
+	}, [])
+
+	const updateTeamInputScores = (team: 'team1' | 'team2', score: number) => {
+		const teamInputScores = JSON.parse(
+			localStorage.getItem('teamInputScores') ?? '{}'
+		)
+
+		const newScores = {
+			...teamInputScores,
+			[`round${roundIndex + 1}`]: {
+				...teamInputScores?.[`round${roundIndex + 1}`],
+				[`matchup${matchupIndex + 1}`]: {
+					...teamInputScores?.[`round${roundIndex + 1}`]?.[
+						`matchup${matchupIndex + 1}`
+					],
+					[team]: score
+				}
 			}
 		}
 
-		loadDataFromLocalStorage('teamInputScores', setTeamInputScores)
-		loadDataFromLocalStorage('teamPoints', setTeamPoints)
-	}, [])
+		localStorage.setItem('teamInputScores', JSON.stringify(newScores))
+		setTeamInputScores(newScores)
+	}
 
-	const updateWins = (playerNames: Array<string>, type: 'subtract' | 'add') => {
+	const updateTeamPoints = (team: 'team1' | 'team2', score: number) => {
+		const teamPoints = JSON.parse(localStorage.getItem('teamPoints') ?? '{}')
+
+		const newPoints = {
+			...teamPoints,
+			[`round${roundIndex + 1}`]: {
+				...teamPoints[`round${roundIndex + 1}`],
+				[`matchup${matchupIndex + 1}`]: {
+					...teamPoints[`round${roundIndex + 1}`]?.[
+						`matchup${matchupIndex + 1}`
+					],
+					[matchup[team][0]?.name ?? '']: score,
+					[matchup[team][1]?.name ?? '']: score
+				}
+			}
+		}
+
+		localStorage.setItem('teamPoints', JSON.stringify(newPoints))
+		setTeamPoints(newPoints)
+	}
+
+	const handleScoreChange = ({
+		team,
+		score
+	}: {
+		team: 'team1' | 'team2'
+		score: number
+	}) => {
+		updateTeamInputScores(team, score)
+		updateTeamPoints(team, score)
+	}
+
+	function findWinners(matchupData: Record<string, number>) {
+		const maxScore = Math.max(...Object.values(matchupData))
+		return Object.keys(matchupData).filter(
+			(player) => matchupData[player] === maxScore
+		)
+	}
+
+	function updateWins(playerNames: Array<string>, type: 'subtract' | 'add') {
 		const updatedPlayers = [...players]
-
 		for (const player of updatedPlayers) {
 			if (playerNames.includes(player.name)) {
 				type === 'subtract' ? (player.wins -= 1) : (player.wins += 1)
@@ -50,14 +122,17 @@ const MatchupCard = ({
 		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 
-	const updateLocalStorage = (key: string, data: any) => {
-		localStorage.setItem(key, JSON.stringify(data))
-	}
-
-	const updateScoresAndPlayers = (type: 'subtract' | 'add') => {
-		const matchupData = teamPoints[roundNumber][matchupNumber]
-		const matchupWinners = findWinners(matchupData)
-		const updatedPlayers = [...players]
+	const updatePlayerPoints = ({
+		roundNumber,
+		matchupNumber,
+		type
+	}: {
+		roundNumber: string
+		matchupNumber: string
+		type: 'subtract' | 'add'
+	}) => {
+		const matchupData = teamPoints[roundNumber][matchupNumber],
+			updatedPlayers = [...players]
 
 		for (const player of updatedPlayers) {
 			const playerName = player.name
@@ -69,77 +144,51 @@ const MatchupCard = ({
 			}
 		}
 
-		updateLocalStorage('players', updatedPlayers)
-		updateWins(matchupWinners, type)
-		updateScores({
-			roundNumber,
-			matchupNumber,
-			scoreSubmitted: !scoreSubmitted
-		})
+		localStorage.setItem('players', JSON.stringify(updatedPlayers))
 	}
 
-	const findWinners = (matchupData: Record<string, number>) => {
-		const maxScore = Math.max(...Object.values(matchupData))
-		return Object.keys(matchupData).filter(
-			(player) => matchupData[player] === maxScore
-		)
-	}
-
-	const handleScoreChange = (team: 'team1' | 'team2', score: number) => {
-		const teamInputScoresCopy = { ...teamInputScores }
-		teamInputScoresCopy[roundNumber][matchupNumber][team] = score
-		updateLocalStorage('teamInputScores', teamInputScoresCopy)
-		setTeamInputScores(teamInputScoresCopy)
-		updateTeamPoints(team, score)
-	}
-
-	const updateTeamPoints = (team: 'team1' | 'team2', score: number) => {
-		const teamPointsCopy = { ...teamPoints }
-		teamPointsCopy[roundNumber][matchupNumber][matchup[team][0]?.name ?? ''] =
-			score
-		teamPointsCopy[roundNumber][matchupNumber][matchup[team][1]?.name ?? ''] =
-			score
-		updateLocalStorage('teamPoints', teamPointsCopy)
-		setTeamPoints(teamPointsCopy)
-	}
-
-	const areAllValuesNumbers = (obj: Record<string, number>) => {
+	function areAllValuesNumbers(obj: Record<string, number>) {
 		if (typeof obj !== 'object' || obj === null) {
 			return false
 		}
+
 		return Object.values(obj).every(
 			(value) => typeof value === 'number' && !isNaN(value)
 		)
 	}
 
-	const handleScoreSubmit = () => {
-		if (
-			!roundMatchup ||
-			Object.keys(roundMatchup).length < 4 ||
-			!areAllValuesNumbers(roundMatchup) ||
-			scoreSubmitted
-		) {
-			return
-		}
+	const handleScoreSubmit = ({
+		roundIndex,
+		matchupIndex
+	}: {
+		roundIndex: number
+		matchupIndex: number
+	}) => {
+		const roundNumber = `round${roundIndex + 1}`,
+			matchupNumber = `matchup${matchupIndex + 1}`,
+			matchupData = teamPoints[roundNumber][matchupNumber],
+			matchupWinners = findWinners(matchupData)
 
-		updateScoresAndPlayers('add')
+		updateWins(matchupWinners, 'add')
+		updatePlayerPoints({ roundNumber, matchupNumber, type: 'add' })
+		updateScores({ roundNumber, matchupNumber, scoreSubmitted: true })
 	}
 
-	const handleEditScores = () => {
-		if (!scoreSubmitted) {
-			return
-		}
-
-		updateScoresAndPlayers('subtract')
+	const handleEditScores = ({
+		roundIndex,
+		matchupIndex
+	}: {
+		roundIndex: number
+		matchupIndex: number
+	}) => {
+		const roundNumber = `round${roundIndex + 1}`,
+			matchupNumber = `matchup${matchupIndex + 1}`,
+			matchupData = teamPoints?.[roundNumber]?.[matchupNumber],
+			matchupWinners = findWinners(matchupData)
+		updateWins(matchupWinners, 'subtract')
+		updatePlayerPoints({ roundNumber, matchupNumber, type: 'subtract' })
+		updateScores({ roundNumber, matchupNumber, scoreSubmitted: false })
 	}
-
-	const team1Players = matchup.team1
-		.map((player) => (player ? player.name : 'TBD'))
-		.join(' / ')
-
-	const team2Players = matchup.team2
-		.map((player) => (player ? player.name : 'TBD'))
-		.join(' / ')
 
 	return (
 		<div key={matchupIndex} className='court-container'>
@@ -151,7 +200,10 @@ const MatchupCard = ({
 					min={0}
 					disabled={scoreSubmitted}
 					onChange={(value) => {
-						handleScoreChange('team1', value)
+						handleScoreChange({
+							team: 'team1',
+							score: value
+						})
 					}}
 					className='match-score'
 				/>
@@ -163,13 +215,25 @@ const MatchupCard = ({
 					min={0}
 					disabled={scoreSubmitted}
 					onChange={(value) => {
-						handleScoreChange('team2', value)
+						handleScoreChange({
+							team: 'team2',
+							score: value
+						})
 					}}
 					className='match-score'
 				/>
 			</div>
 			{scoreSubmitted ? (
-				<Button variant='text' color='primary' onClick={handleEditScores}>
+				<Button
+					variant='text'
+					color='primary'
+					onClick={() =>
+						handleEditScores({
+							roundIndex,
+							matchupIndex
+						})
+					}
+				>
 					Edit Scores
 				</Button>
 			) : (
@@ -182,7 +246,12 @@ const MatchupCard = ({
 						!areAllValuesNumbers(roundMatchup) ||
 						scoreSubmitted
 					}
-					onClick={handleScoreSubmit}
+					onClick={() =>
+						handleScoreSubmit({
+							roundIndex,
+							matchupIndex
+						})
+					}
 				>
 					{scoreSubmitted ? 'Submitted' : 'Submit Scores'}
 				</Button>
