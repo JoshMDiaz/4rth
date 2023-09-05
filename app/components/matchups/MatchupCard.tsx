@@ -4,6 +4,7 @@ import NumberInput from '../NumberInput'
 import { useScores } from '~/hooks/useScores'
 import { Player } from '~/hooks/usePlayers'
 import { useEffect, useState } from 'react'
+import TeamScore from './TeamScore'
 
 type MatchupCardProps = {
 	matchup: Matchup
@@ -49,60 +50,6 @@ const MatchupCard = ({
 			setTeamPoints(JSON.parse(savedTeamPoints))
 		}
 	}, [])
-
-	const updateTeamInputScores = (team: 'team1' | 'team2', score: number) => {
-		const teamInputScores = JSON.parse(
-			localStorage.getItem('teamInputScores') ?? '{}'
-		)
-
-		const newScores = {
-			...teamInputScores,
-			[`round${roundIndex + 1}`]: {
-				...teamInputScores?.[`round${roundIndex + 1}`],
-				[`matchup${matchupIndex + 1}`]: {
-					...teamInputScores?.[`round${roundIndex + 1}`]?.[
-						`matchup${matchupIndex + 1}`
-					],
-					[team]: score
-				}
-			}
-		}
-
-		localStorage.setItem('teamInputScores', JSON.stringify(newScores))
-		setTeamInputScores(newScores)
-	}
-
-	const updateTeamPoints = (team: 'team1' | 'team2', score: number) => {
-		const teamPoints = JSON.parse(localStorage.getItem('teamPoints') ?? '{}')
-
-		const newPoints = {
-			...teamPoints,
-			[`round${roundIndex + 1}`]: {
-				...teamPoints[`round${roundIndex + 1}`],
-				[`matchup${matchupIndex + 1}`]: {
-					...teamPoints[`round${roundIndex + 1}`]?.[
-						`matchup${matchupIndex + 1}`
-					],
-					[matchup[team][0]?.name ?? '']: score,
-					[matchup[team][1]?.name ?? '']: score
-				}
-			}
-		}
-
-		localStorage.setItem('teamPoints', JSON.stringify(newPoints))
-		setTeamPoints(newPoints)
-	}
-
-	const handleScoreChange = ({
-		team,
-		score
-	}: {
-		team: 'team1' | 'team2'
-		score: number
-	}) => {
-		updateTeamInputScores(team, score)
-		updateTeamPoints(team, score)
-	}
 
 	function findWinners(matchupData: Record<string, number>) {
 		const maxScore = Math.max(...Object.values(matchupData))
@@ -193,36 +140,26 @@ const MatchupCard = ({
 	return (
 		<div key={matchupIndex} className='court-container'>
 			<h3>Court {matchupIndex + 1}</h3>
-			<div className='team-score-container'>
-				<span>{team1Players}</span>
-				<NumberInput
-					value={teamInputScores?.[roundNumber]?.[matchupNumber]?.team1}
-					min={0}
-					disabled={scoreSubmitted}
-					onChange={(value) => {
-						handleScoreChange({
-							team: 'team1',
-							score: value
-						})
-					}}
-					className='match-score'
-				/>
-			</div>
-			<div className='team-score-container'>
-				<span>{team2Players}</span>
-				<NumberInput
-					value={teamInputScores?.[roundNumber]?.[matchupNumber]?.team2}
-					min={0}
-					disabled={scoreSubmitted}
-					onChange={(value) => {
-						handleScoreChange({
-							team: 'team2',
-							score: value
-						})
-					}}
-					className='match-score'
-				/>
-			</div>
+			<TeamScore
+				team='team1'
+				disabled={scoreSubmitted}
+				matchup={matchup}
+				teamInputScores={teamInputScores}
+				roundNumber={roundNumber}
+				matchupNumber={matchupNumber}
+				setTeamPoints={setTeamPoints}
+				setTeamInputScores={setTeamInputScores}
+			/>
+			<TeamScore
+				team='team2'
+				disabled={scoreSubmitted}
+				matchup={matchup}
+				teamInputScores={teamInputScores}
+				roundNumber={roundNumber}
+				matchupNumber={matchupNumber}
+				setTeamPoints={setTeamPoints}
+				setTeamInputScores={setTeamInputScores}
+			/>
 			{scoreSubmitted ? (
 				<Button
 					variant='text'
