@@ -1,4 +1,4 @@
-import logo from '../images/logo-black.svg'
+import logo from '../images/logo-color.svg'
 import MenuDrawer from './MenuDrawer'
 
 const Header = (): JSX.Element => {
