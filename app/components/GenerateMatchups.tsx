@@ -128,7 +128,7 @@ const GenerateMatchups = ({ redirect }: GenerateMatchupsProps): JSX.Element => {
 	}
 
 	return (
-		<Button variant='contained' color='primary' onClick={generate}>
+		<Button variant='outlined' color='primary' onClick={generate}>
 			Generate Matchups
 		</Button>
 	)

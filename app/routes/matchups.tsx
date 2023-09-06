@@ -32,7 +32,7 @@ const Matchups: React.FC = () => {
 		return (
 			<Paper className='flex justify-content-center p-16'>
 				<Button
-					variant='contained'
+					variant='outlined'
 					color='primary'
 					onClick={() => navigate('/players')}
 				>

@@ -168,7 +168,7 @@ const MatchupCard = ({
 				</Button>
 			) : (
 				<Button
-					variant='contained'
+					variant='outlined'
 					color='primary'
 					disabled={
 						!roundMatchup ||
