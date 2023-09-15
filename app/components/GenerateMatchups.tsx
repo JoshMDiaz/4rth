@@ -56,67 +56,67 @@ const GenerateMatchups = ({ redirect }: GenerateMatchupsProps): JSX.Element => {
 				// Round 2
 				[
 					{
-						team1: [players[4], players[6]],
-						team2: [players[5], players[7]]
+						team1: [players[0], players[4]],
+						team2: [players[1], players[5]]
 					},
 					{
-						team1: [players[0], players[2]],
-						team2: [players[1], players[3]]
+						team1: [players[2], players[6]],
+						team2: [players[3], players[7]]
 					}
 				],
 				// Round 3
 				[
 					{
-						team1: [players[0], players[3]],
-						team2: [players[1], players[2]]
+						team1: [players[0], players[2]],
+						team2: [players[4], players[6]]
 					},
 					{
-						team1: [players[4], players[7]],
-						team2: [players[5], players[6]]
+						team1: [players[1], players[3]],
+						team2: [players[5], players[7]]
 					}
 				],
 				// Round 4
 				[
 					{
-						team1: [players[2], players[6]],
-						team2: [players[3], players[7]]
+						team1: [players[0], players[5]],
+						team2: [players[2], players[7]]
 					},
 					{
-						team1: [players[0], players[4]],
-						team2: [players[1], players[5]]
+						team1: [players[1], players[4]],
+						team2: [players[3], players[6]]
 					}
 				],
-				// Round 5
+				// Round 5,
 				[
 					{
-						team1: [players[0], players[5]],
-						team2: [players[1], players[6]]
+						team1: [players[0], players[3]],
+						team2: [players[5], players[6]]
 					},
 					{
-						team1: [players[2], players[7]],
-						team2: [players[3], players[4]]
+						team1: [players[1], players[7]],
+						team2: [players[4], players[2]]
 					}
 				],
 				// Round 6
 				[
 					{
-						team1: [players[2], players[4]],
-						team2: [players[3], players[5]]
+						team1: [players[0], players[7]],
+						team2: [players[3], players[4]]
 					},
 					{
-						team1: [players[0], players[6]],
-						team2: [players[1], players[7]]
+						team1: [players[1], players[6]],
+						team2: [players[5], players[2]]
 					}
 				],
 				// Round 7
 				[
 					{
-						team1: [players[0], players[7]],
-						team2: [players[1], players[4]]
+						team1: [players[0], players[6]],
+						team2: [players[7], players[4]]
 					},
 					{
-						team1: [players[2], players[5]],
-						team2: [players[3], players[6]]
+						team1: [players[3], players[5]],
+						team2: [players[2], players[1]]
 					}
 				]
 			]
