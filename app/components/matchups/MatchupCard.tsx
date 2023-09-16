@@ -74,13 +74,40 @@ const MatchupCard = ({
 		const matchupData = teamPoints[roundNumber][matchupNumber],
 			updatedPlayers = [...players]
 
-		for (const player of updatedPlayers) {
-			const playerName = player.name
+		interface DataObject {
+			[key: string]: number
+		}
 
-			if (matchupData[playerName] !== undefined) {
-				type === 'subtract'
-					? (player.points -= matchupData[playerName])
-					: (player.points += matchupData[playerName])
+		function findMinMax(data: DataObject): { min: number; max: number } {
+			const dataArray = Object.values(data)
+
+			if (dataArray.length === 0) {
+				throw new Error('The object is empty')
+			}
+
+			const minValue = Math.min(...dataArray)
+			const maxValue = Math.max(...dataArray)
+
+			return { min: minValue, max: maxValue }
+		}
+
+		const minMaxResults = findMinMax(matchupData),
+			{ min, max } = minMaxResults,
+			lowerDiff = min - max,
+			highDiff = max - min
+
+		for (const player of updatedPlayers) {
+			const playerName = player.name,
+				playerPoints = matchupData[playerName]
+
+			if (playerPoints !== undefined) {
+				if (type === 'subtract') {
+					player.points -= playerPoints
+					player.diff -= playerPoints === min ? lowerDiff : highDiff
+				} else {
+					player.points += playerPoints
+					player.diff += playerPoints === min ? lowerDiff : highDiff
+				}
 			}
 		}
 

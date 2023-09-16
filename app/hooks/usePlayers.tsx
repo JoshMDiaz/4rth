@@ -6,6 +6,7 @@ export interface Player {
 	wins: number
 	skinz: number
 	points: number
+	diff: number
 }
 
 export const usePlayers = (): [

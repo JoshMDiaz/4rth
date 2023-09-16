@@ -1,27 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-	TextField,
-	Button,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Paper,
-	Hidden,
-	Alert,
-	Dialog,
-	DialogTitle,
-	DialogContentText,
-	DialogContent,
-	DialogActions,
-	IconButton
-} from '@mui/material'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import '../styles/players.css'
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined'
+import { TextField, Paper, IconButton } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import { V2_MetaFunction } from '@remix-run/node'
 import { Player, usePlayers } from '~/hooks/usePlayers'
@@ -64,7 +42,8 @@ const PlayerForm: React.FC = () => {
 					name: newPlayerName,
 					wins: 0,
 					skinz: 0,
-					points: 0
+					points: 0,
+					diff: 0
 				}
 				updatePlayers([...players, newPlayer])
 				setNewPlayerName('')

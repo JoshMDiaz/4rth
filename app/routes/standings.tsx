@@ -15,10 +15,13 @@ export const meta: V2_MetaFunction = () => {
 const StandingsPage: React.FC = () => {
 	const [players] = usePlayers()
 
-	// Custom sort function to sort by wins and then by points
+	// Custom sort function to sort by wins, diff, and then points
 	const customSort = (a: Player, b: Player) => {
 		if (a.wins === b.wins) {
-			return b.points - a.points // Sort by points if wins are equal
+			if (a.diff === b.diff) {
+				return b.points - a.points // Sort by points if wins and diff are equal
+			}
+			return b.diff - a.diff // Sort by diff if wins are equal
 		}
 		return b.wins - a.wins // Sort by wins by default
 	}

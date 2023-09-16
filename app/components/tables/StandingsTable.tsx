@@ -19,6 +19,7 @@ const StandingsTable = ({ players }: StandingsTableProps): JSX.Element => {
 					<TableRow>
 						<TableCell>Player Name</TableCell>
 						<TableCell>Total Wins</TableCell>
+						<TableCell>Point Differential</TableCell>
 						<TableCell>Total Points</TableCell>
 						<TableCell>Total Skinz</TableCell>
 					</TableRow>
@@ -28,6 +29,7 @@ const StandingsTable = ({ players }: StandingsTableProps): JSX.Element => {
 						<TableRow key={player.id}>
 							<TableCell>{player.name}</TableCell>
 							<TableCell>{player.wins}</TableCell>
+							<TableCell>{player.diff}</TableCell>
 							<TableCell>{player.points}</TableCell>
 							<TableCell>{player.skinz}</TableCell>
 						</TableRow>
