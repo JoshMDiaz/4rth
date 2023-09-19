@@ -17,6 +17,7 @@ header {
 		margin: auto;
 		height: 36px;
 		padding: 8px 0;
+		max-width: 100px;
 	}
 }
 
@@ -61,5 +62,5 @@ th.css-1ygcj2i-MuiTableCell-root {
 }
 
 thead {
-	border-bottom: 2px solid #54bfbf;
+	border-bottom: 2px solid #37a0a0;
 }
