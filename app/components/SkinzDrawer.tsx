@@ -55,7 +55,7 @@ const SkinzDrawer = (): JSX.Element => {
 				}}
 				unmountOnExit
 			>
-				<Fab color='secondary' className='skinz-button' onClick={toggleDrawer}>
+				<Fab color='primary' className='skinz-button' onClick={toggleDrawer}>
 					Skinz
 				</Fab>
 			</Zoom>
