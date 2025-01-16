@@ -187,7 +187,7 @@ const PlayersTable = ({ players }: PlayersTableType): JSX.Element => {
 													<Hidden smUp>
 														{editingPlayer?.id === player.id ? (
 															<Button
-																variant='outlined'
+																variant='contained'
 																color='primary'
 																onClick={() =>
 																	saveEditedName(

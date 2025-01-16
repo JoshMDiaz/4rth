@@ -4,25 +4,25 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 export const meta: V2_MetaFunction = () => {
-	return [
-		{ title: 'Skinz' },
-		{ name: 'description', content: 'Pickleball mixer, but better!' }
-	]
+  return [
+    { title: '4RTH' },
+    { name: 'description', content: 'Pickleball mixer, but better!' },
+  ]
 }
 
 export default function Index() {
-	const { pathname } = useLocation(),
-		navigate = useNavigate()
+  const { pathname } = useLocation(),
+    navigate = useNavigate()
 
-	useEffect(() => {
-		if (pathname === '/') {
-			navigate('/players')
-		}
-	}, [])
+  useEffect(() => {
+    if (pathname === '/') {
+      navigate('/players')
+    }
+  }, [])
 
-	return (
-		<div
-			style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}
-		></div>
-	)
+  return (
+    <div
+      style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}
+    ></div>
+  )
 }

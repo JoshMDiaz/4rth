@@ -6,35 +6,35 @@ import Winners from '~/components/Winners'
 import StandingsTable from '~/components/tables/StandingsTable'
 
 export const meta: V2_MetaFunction = () => {
-	return [
-		{ title: 'Skinz Standings' },
-		{ name: 'description', content: 'See the results from the Skinz mixer.' }
-	]
+  return [
+    { title: '4RTH Standings' },
+    { name: 'description', content: 'See the results from the Skinz mixer.' },
+  ]
 }
 
 const StandingsPage: React.FC = () => {
-	const [players] = usePlayers()
+  const [players] = usePlayers()
 
-	// Custom sort function to sort by wins, diff, and then points
-	const customSort = (a: Player, b: Player) => {
-		if (a.wins === b.wins) {
-			if (a.diff === b.diff) {
-				return b.points - a.points // Sort by points if wins and diff are equal
-			}
-			return b.diff - a.diff // Sort by diff if wins are equal
-		}
-		return b.wins - a.wins // Sort by wins by default
-	}
+  // Custom sort function to sort by wins, diff, and then points
+  const customSort = (a: Player, b: Player) => {
+    if (a.wins === b.wins) {
+      if (a.diff === b.diff) {
+        return b.points - a.points // Sort by points if wins and diff are equal
+      }
+      return b.diff - a.diff // Sort by diff if wins are equal
+    }
+    return b.wins - a.wins // Sort by wins by default
+  }
 
-	// Sort the players using the custom sort function
-	const sortedPlayerData = [...players].sort(customSort)
+  // Sort the players using the custom sort function
+  const sortedPlayerData = [...players].sort(customSort)
 
-	return (
-		<div className='results-container'>
-			<Winners players={sortedPlayerData} />
-			<StandingsTable players={sortedPlayerData} />
-		</div>
-	)
+  return (
+    <div className='results-container'>
+      <Winners players={sortedPlayerData} />
+      <StandingsTable players={sortedPlayerData} />
+    </div>
+  )
 }
 
 export default StandingsPage
