@@ -9,12 +9,6 @@
   gap: 16px;
 }
 
-button.skinz-button {
-  position: fixed;
-  bottom: 72px;
-  right: 16px;
-}
-
 .table-container {
   padding: 0 16px;
   display: flex;
