@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, Paper } from '@mui/material'
 import GenerateMatchups from '~/components/GenerateMatchups'
 import '../styles/matchups.css'
-import SkinzDrawer from '~/components/SkinzDrawer'
 import { V2_MetaFunction } from '@remix-run/node'
 import { usePlayers } from '~/hooks/usePlayers'
 import { useNavigate } from '@remix-run/react'
@@ -14,7 +13,7 @@ export const meta: V2_MetaFunction = () => {
     { title: '4RTH Matchups' },
     {
       name: 'description',
-      content: 'See the generated matchups for the Skinz mixer.',
+      content: 'See the generated matchups for the 4RTH mixer.',
     },
   ]
 }
@@ -70,7 +69,6 @@ const Matchups: React.FC = () => {
           </div>
         </Paper>
       ))}
-      <SkinzDrawer />
     </div>
   )
 }

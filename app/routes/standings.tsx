@@ -8,7 +8,7 @@ import StandingsTable from '~/components/tables/StandingsTable'
 export const meta: V2_MetaFunction = () => {
   return [
     { title: '4RTH Standings' },
-    { name: 'description', content: 'See the results from the Skinz mixer.' },
+    { name: 'description', content: 'See the results from the 4RTH mixer.' },
   ]
 }
 

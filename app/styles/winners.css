@@ -8,20 +8,10 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
   }
-  .winners-container .winner:last-child {
-    grid-column: span 2;
-  }
 }
-@media (min-width: 997px) {
+@media (min-width: 1026px) {
   .winners-container {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-  }
-  .winners-container .winner:nth-child(-n+3) {
-    grid-column: span 2;
-  }
-  .winners-container .winner:nth-child(n+4) {
-    grid-column: span 3;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -32,6 +22,7 @@
   align-items: center;
   flex-direction: column;
   gap: 8px;
+  text-align: center;
 }
 .winner h2 {
   margin: 0;

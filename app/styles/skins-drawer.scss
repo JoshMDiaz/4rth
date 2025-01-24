@@ -1,23 +1,17 @@
 .drawer-container {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .buttons {
-	display: flex;
-	align-items: center;
-	gap: 16px;
-}
-
-button.skinz-button {
-	position: fixed;
-	bottom: 72px;
-	right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .table-container {
-	padding: 0 16px;
-	display: flex;
-	gap: 16px;
-	flex-direction: column;
+  padding: 0 16px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
 }

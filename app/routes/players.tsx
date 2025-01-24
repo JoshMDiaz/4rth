@@ -10,7 +10,7 @@ import PlayersTable from '~/components/tables/PlayersTable'
 export const meta: V2_MetaFunction = () => {
   return [
     { title: '4RTH Players' },
-    { name: 'description', content: 'Add the players for the Skinz mixer.' },
+    { name: 'description', content: 'Add the players for the 4RTH mixer.' },
   ]
 }
 
@@ -41,7 +41,6 @@ const PlayerForm: React.FC = () => {
           id: Date.now(), // Assign a unique ID
           name: newPlayerName,
           wins: 0,
-          skinz: 0,
           points: 0,
           diff: 0,
         }
