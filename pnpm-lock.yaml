@@ -26,6 +26,9 @@ importers:
       '@remix-run/dev':
         specifier: ^2.15.2
         version: 2.15.2(@remix-run/react@2.15.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@types/node@20.17.16)(typescript@5.7.3)(vite@5.4.14(@types/node@20.17.16))
+      '@remix-run/node':
+        specifier: ^2.15.2
+        version: 2.15.2(typescript@5.7.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
