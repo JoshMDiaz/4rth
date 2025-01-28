@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Matchup } from '@/hooks/useMatchups'
 import { useScores } from '@/hooks/useScores'
 import { Player } from '@/hooks/usePlayers'
@@ -218,11 +217,17 @@ const MatchupCard = ({
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <div className='p-2 space-y-4'>
+      <div className='flex items-center justify-between'>
         <h3 className='text-lg font-semibold'>Court {matchupIndex + 1}</h3>
-      </CardHeader>
-      <CardContent className='space-y-4'>
+        {scoreSubmitted && (
+          <span className='text-sm px-2 py-1 bg-green-50 text-green-700 rounded-full'>
+            Submitted
+          </span>
+        )}
+      </div>
+
+      <div className='space-y-6'>
         <TeamScore
           team='team1'
           disabled={scoreSubmitted}
@@ -235,6 +240,11 @@ const MatchupCard = ({
           inputRef={team1InputRef}
           onKeyDown={handleTeam1KeyDown}
         />
+        <div className='flex items-center'>
+          <div className='h-px bg-gray-200 flex-1' />
+          <span className='px-3 text-sm text-gray-500'>VS</span>
+          <div className='h-px bg-gray-200 flex-1' />
+        </div>
         <TeamScore
           team='team2'
           disabled={scoreSubmitted}
@@ -247,30 +257,31 @@ const MatchupCard = ({
           inputRef={team2InputRef}
           onKeyDown={handleTeam2KeyDown}
         />
-        {scoreSubmitted ? (
-          <Button
-            variant='outline'
-            onClick={() => handleEditScores({ roundIndex, matchupIndex })}
-            className='w-full'
-          >
-            Edit Scores
-          </Button>
-        ) : (
-          <Button
-            disabled={
-              !roundMatchup ||
-              (roundMatchup && Object.keys(roundMatchup).length < 4) ||
-              !areAllValuesNumbers(roundMatchup) ||
-              scoreSubmitted
-            }
-            onClick={() => handleScoreSubmit({ roundIndex, matchupIndex })}
-            className='w-full'
-          >
-            {scoreSubmitted ? 'Submitted' : 'Submit Scores'}
-          </Button>
-        )}
-      </CardContent>
-    </Card>
+      </div>
+
+      {scoreSubmitted ? (
+        <Button
+          variant='outline'
+          onClick={() => handleEditScores({ roundIndex, matchupIndex })}
+          className='w-full mt-6'
+        >
+          Edit Scores
+        </Button>
+      ) : (
+        <Button
+          disabled={
+            !roundMatchup ||
+            (roundMatchup && Object.keys(roundMatchup).length < 4) ||
+            !areAllValuesNumbers(roundMatchup) ||
+            scoreSubmitted
+          }
+          onClick={() => handleScoreSubmit({ roundIndex, matchupIndex })}
+          className='w-full mt-6'
+        >
+          Submit Scores
+        </Button>
+      )}
+    </div>
   )
 }
 

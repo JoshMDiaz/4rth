@@ -37,12 +37,12 @@ export default function Matchups() {
     <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'>
       {matchups.map((round, roundIndex) => (
         <Card key={roundIndex} className='flex flex-col h-full'>
-          <div className='p-4 border-b-2 border-primary flex justify-between'>
+          <div className='p-4 border-b-4 border-primary flex justify-between'>
             <h2 className='text-xl font-semibold m-0'>
               Round {roundIndex + 1}
             </h2>
           </div>
-          <div className='p-4 flex flex-col gap-8 flex-1 bg-[#d4d4d4]'>
+          <div className='p-2 flex flex-col gap-4 flex-1'>
             {round.map((matchup, matchupIndex) => (
               <MatchupCard
                 key={`${matchup}-${matchupIndex}`}

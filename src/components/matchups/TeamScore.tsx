@@ -115,7 +115,7 @@ const TeamScore = ({
         onChange={(value) => {
           handleScoreChange(team, value)
         }}
-        className='w-[75px]'
+        className='w-[70px] h-[50px] text-xl md:text-xl'
         ref={inputRef}
         onKeyDown={onKeyDown}
       />
