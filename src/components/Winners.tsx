@@ -8,7 +8,7 @@ type WinnersProps = {
   players: Player[]
 }
 
-const Winners = ({ players }: WinnersProps): JSX.Element | null => {
+const Winners = ({ players }: WinnersProps): React.JSX.Element | null => {
   const [scores] = useScores()
 
   const showWinners = (obj: Scores): boolean => {

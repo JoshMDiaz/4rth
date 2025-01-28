@@ -12,25 +12,27 @@ import { Player } from '@/hooks/usePlayers'
 
 type StandingsTableProps = { players: Player[] }
 
-const StandingsTable = ({ players }: StandingsTableProps): JSX.Element => {
+const StandingsTable = ({
+  players,
+}: StandingsTableProps): React.JSX.Element => {
   return (
-    <div className='rounded-md border'>
+    <div className='rounded-md border bg-white'>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Wins</TableHead>
-            <TableHead>Differential</TableHead>
-            <TableHead>Points</TableHead>
+            <TableHead className='text-lg'>Name</TableHead>
+            <TableHead className='text-lg'>Wins</TableHead>
+            <TableHead className='text-lg'>Differential</TableHead>
+            <TableHead className='text-lg'>Points</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {players.map((player) => (
             <TableRow key={player.id}>
-              <TableCell>{player.name}</TableCell>
-              <TableCell>{player.wins}</TableCell>
-              <TableCell>{player.diff}</TableCell>
-              <TableCell>{player.points}</TableCell>
+              <TableCell className='text-lg'>{player.name}</TableCell>
+              <TableCell className='text-lg'>{player.wins}</TableCell>
+              <TableCell className='text-lg'>{player.diff}</TableCell>
+              <TableCell className='text-lg'>{player.points}</TableCell>
             </TableRow>
           ))}
         </TableBody>

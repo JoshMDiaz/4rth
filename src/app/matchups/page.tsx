@@ -42,7 +42,7 @@ export default function Matchups() {
               Round {roundIndex + 1}
             </h2>
           </div>
-          <div className='p-4 flex flex-col gap-8 flex-1 bg-[#EFEFEF]'>
+          <div className='p-4 flex flex-col gap-8 flex-1 bg-[#d4d4d4]'>
             {round.map((matchup, matchupIndex) => (
               <MatchupCard
                 key={`${matchup}-${matchupIndex}`}

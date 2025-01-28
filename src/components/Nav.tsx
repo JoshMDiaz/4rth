@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Users, Infinity, CheckSquare } from 'lucide-react'
 
-const Nav = (): JSX.Element => {
+const Nav = (): React.JSX.Element => {
   const pathname = usePathname()
   const router = useRouter()
   const pageName = pathname.split('/')[1]

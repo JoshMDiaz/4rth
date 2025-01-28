@@ -10,7 +10,9 @@ type GenerateMatchupsProps = {
   redirect?: boolean
 }
 
-const GenerateMatchups = ({ redirect }: GenerateMatchupsProps): JSX.Element => {
+const GenerateMatchups = ({
+  redirect,
+}: GenerateMatchupsProps): React.JSX.Element => {
   const { toast } = useToast()
   const [players] = usePlayers()
   const [, updateMatchups] = useMatchups()

@@ -13,7 +13,7 @@ const ClearDataDialog = dynamic(() => import('@/components/ClearDataDialog'), {
   ssr: false,
 })
 
-const MenuDrawer = (): JSX.Element => {
+const MenuDrawer = (): React.JSX.Element => {
   const [, updatePlayers] = usePlayers()
   const [isOpen, setIsOpen] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)

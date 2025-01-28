@@ -107,7 +107,7 @@ const TeamScore = ({
 
   return (
     <div className='flex items-center justify-between gap-4'>
-      <span className='font-medium'>{playerNames}</span>
+      <span className='text-lg'>{playerNames}</span>
       <NumberInput
         value={teamInputScores?.[roundNumber]?.[matchupNumber]?.[team]}
         min={0}

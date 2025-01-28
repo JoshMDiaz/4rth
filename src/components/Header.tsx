@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import MenuDrawer from '@/components/MenuDrawer'
 
-const Header = (): JSX.Element => {
+const Header = (): React.JSX.Element => {
   return (
     <header className='flex items-center justify-between p-2'>
       <div className='w-10' />
